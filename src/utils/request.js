@@ -12,8 +12,8 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
-    config.headers.token = localStorage.getItem('token')
+    // 设置请求头Authorization值为token
+    config.headers.Authorization = localStorage.getItem('token')
 
     return config
   },
@@ -37,16 +37,16 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    const res = response.data
+    const res = response
 
     // if the custom code is not 100, it is judged as an error.
-    if (res.code !== 200) {
+    if (res.status !== 200) {
       Message({
-        message: res.msg || 'Error check your token or method',
+        message: res.status || 'Error check your token or method',
         type: 'error',
         duration: 2 * 1000
       })
-      return Promise.reject(new Error(res.msg || 'Error'))
+      return Promise.reject(new Error(res.status || 'Error'))
     } else {
       return res
     }

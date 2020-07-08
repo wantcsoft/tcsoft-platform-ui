@@ -43,6 +43,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  // 401未授权界面
+  {
+    path: '/401',
+    component: () => import('@/views/401'),
+    hidden: true
+  },
   // 用户管理
   {
     path: '/manage',
@@ -144,12 +150,13 @@ export const constantRoutes = [
     }]
   },
 
-  // 404 page must be placed at the end !!!
+  // 404 页面一定要放在最后 !!!
   {
     path: '*',
     redirect: '/404',
     hidden: true
   }
+
 ]
 
 const createRouter = () => new Router({

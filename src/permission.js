@@ -6,20 +6,20 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login'] // 设置白名单页面
 
 router.beforeEach(async(to, from, next) => {
-  // start progress bar
+  // 进度条
   NProgress.start()
 
-  // set page title
+  // 设置页面标题
   document.title = getPageTitle(to.meta.title)
 
-  // determine whether the user has logged in
+  // 确认哪些人可以进入
   const hasLogin = localStorage.getItem('hasLogin')
   if (hasLogin) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
+      // 从登录页面跳转到主页面
       next({ path: '/' })
       NProgress.done()
     } else {

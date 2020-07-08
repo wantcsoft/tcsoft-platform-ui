@@ -20,7 +20,7 @@
           id="account"
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="账号"
           name="username"
           type="text"
           tabindex="1"
@@ -38,7 +38,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import md5 from "js-md5";
 export default {
   name: "Login",
   data() {
@@ -83,8 +82,8 @@ export default {
     };
     return {
       loginForm: {
-        username: "admin",
-        password: "111111"
+        username: "",
+        password: ""
       },
       loginRules: {
         username: [
@@ -121,36 +120,22 @@ export default {
     handleLogin() {
       let that = this;
       this.loading = true;
-      //数据格式验证
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          localStorage.setItem("hasLogin", true);
-          this.$router.push({ path: "/" });
-        } else {
-          console.log("验证失败");
-        }
-      });
-      return 0;
-      // 可自定义登录时的逻辑处理
       this.req({
-        url: "login",
+        url: "http://localhost:8001/auth",
         data: {
-          account: that.loginForm.username,
-          psw: md5(that.loginForm.password + "*/-sz") //对密码进行加盐md5处理
+          username: that.loginForm.username,
+          password: that.loginForm.password
         },
         method: "POST"
       }).then(
         res => {
-          console.log("res :", res);
           localStorage.setItem("hasLogin", true);
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
+          localStorage.setItem("token", res.data.data);
+          // localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
           this.$router.push({ path: "/" });
         },
         err => {
           console.log("err :", err);
-          this.passwordError = true;
-          this.loading = false;
         }
       );
     }
