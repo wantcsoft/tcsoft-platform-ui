@@ -6,7 +6,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login'] // 设置白名单页面
+const whiteList = ['/login', '/develop', '/develop/**'] // 设置白名单页面
 
 router.beforeEach(async(to, from, next) => {
   // 进度条

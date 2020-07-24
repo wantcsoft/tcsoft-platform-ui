@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'TCsoft数据平台',
+  title: 'TCSOFT数据平台',
 
   /**
    * @type {boolean} true | false

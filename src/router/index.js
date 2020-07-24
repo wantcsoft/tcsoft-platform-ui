@@ -37,21 +37,27 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  // 404界面
   {
-    path: '/404',
-    component: () => import('@/views/404'),
+    path: '/develop',
+    component: () => import('@/views/login/develop'),
     hidden: true
   },
-  // 401未授权界面
+  //首页
   {
-    path: '/401',
-    component: () => import('@/views/401'),
-    hidden: true
+    path: '/',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'index',
+      component: () => import('@/views/index/index'),
+      meta: {
+        title: '首页',
+      }
+    }]
   },
   // 用户管理
   {
-    path: '/manage',
+    path: '/',
     component: Layout,
     children: [{
       path: 'manage',
@@ -64,48 +70,48 @@ export const constantRoutes = [
     }]
   },
   // 服务管理
-  {
-    path: '/service01',
-    component: Layout,
-    redirect: '/service01/upload',
-    meta: {
-      title: 'xx服务',
-      icon: 'plane'
-    },
-    children: [{
-        path: 'check-template',
-        name: 'check-template',
-        component: () => import('@/views/service01/check-template'),
-        meta: {
-          title: '功能1',
-        }
-      },
-      {
-        path: 'logo',
-        name: 'logo',
-        component: () => import('@/views/service01/check-logo'),
-        meta: {
-          title: '功能2',
-        }
-      },
-      {
-        path: 'generate',
-        name: 'generate',
-        component: () => import('@/views/service01/generate'),
-        meta: {
-          title: '功能3',
-        }
-      },
-      {
-        path: 'check',
-        name: 'check',
-        component: () => import('@/views/service01/check'),
-        meta: {
-          title: '功能4',
-        }
-      },
-    ]
-  },
+  // {
+  //   path: '/service01',
+  //   component: Layout,
+  //   redirect: '/service01/upload',
+  //   meta: {
+  //     title: 'xx服务',
+  //     icon: 'plane'
+  //   },
+  //   children: [{
+  //       path: 'check-template',
+  //       name: 'check-template',
+  //       component: () => import('@/views/service01/check-template'),
+  //       meta: {
+  //         title: '功能1',
+  //       }
+  //     },
+  //     {
+  //       path: 'logo',
+  //       name: 'logo',
+  //       component: () => import('@/views/service01/check-logo'),
+  //       meta: {
+  //         title: '功能2',
+  //       }
+  //     },
+  //     {
+  //       path: 'generate',
+  //       name: 'generate',
+  //       component: () => import('@/views/service01/generate'),
+  //       meta: {
+  //         title: '功能3',
+  //       }
+  //     },
+  //     {
+  //       path: 'check',
+  //       name: 'check',
+  //       component: () => import('@/views/service01/check'),
+  //       meta: {
+  //         title: '功能4',
+  //       }
+  //     },
+  //   ]
+  // },
   // 服务管理
   {
     path: '/laboratory',
@@ -135,20 +141,31 @@ export const constantRoutes = [
       },
     ]
   },
-
-  //测试页面
+  // 404界面
   {
-    path: '/',
-    component: Layout,
-    children: [{
-      path: 'test',
-      name: 'test',
-      component: () => import('@/views/test/test'),
-      meta: {
-        title: '测试',
-      }
-    }]
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
   },
+  // 401未授权界面
+  {
+    path: '/401',
+    component: () => import('@/views/401'),
+    hidden: true
+  },
+  //测试页面
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'test',
+  //     name: 'test',
+  //     component: () => import('@/views/test/test'),
+  //     meta: {
+  //       title: '测试',
+  //     }
+  //   }]
+  // },
 
   // 404 页面一定要放在最后 !!!
   {

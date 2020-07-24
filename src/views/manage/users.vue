@@ -1,7 +1,7 @@
 <template>
   <div class="user-root">
     <div class="search">
-      <el-input placeholder="请输入账号" v-model="keyword" clearable class="input-with-select">
+      <el-input placeholder="请输入账号" v-model="keyword" @keyup.enter.native="goSearch" clearable class="input-with-select">
         <el-button @click="goSearch" slot="append" icon="el-icon-search"></el-button>
       </el-input>
     </div>
@@ -19,7 +19,7 @@
           <template slot-scope="scope">
             <i class="el-icon-edit" @click="handleEdit(scope.row)"></i>
             <span>&nbsp;&nbsp;</span>
-            <i class="el-icon-delete"></i>
+            <i class="el-icon-delete" @click="handleDelete(scope.row, scope.index)"></i>
 <!--            <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>-->
 <!--            <el-button type="text" size="small">删除</el-button>-->
           </template>
@@ -125,7 +125,7 @@
       getUsers() {
         let that = this;
         this.req({
-          url: "http://localhost:8001/auth/queryAll",
+          url: "/auth/queryAll",
           method: "GET",
         }).then(
           res => {
@@ -134,7 +134,6 @@
               // alert(res.data.message);
             }else {
               that.tableData = res.data.data;
-              console.log(res);
             }
           },
           err => {
@@ -146,12 +145,11 @@
       getGroups() {
         let that = this;
         this.req({
-          url: "http://localhost:8001/getGroups",
+          url: "/getGroups",
           method: "GET",
         }).then(
           res => {
             that.groupData = res.data.data;
-            console.log(res);
           },
           err => {
             console.log("err :", err);
@@ -162,7 +160,7 @@
       getRoles () {
         let that = this;
         this.req({
-          url: "http://localhost:8001/getRoles",
+          url: "/getRoles",
           method: "GET",
         }).then(
           res => {
@@ -175,7 +173,61 @@
       },
       // 搜索
       goSearch() {
-        console.log("搜索")
+        if (this.keyword === ''){
+          this.getUsers();
+        }else {
+          this.req({
+            url: "/auth/queryByName",
+            params: {
+              "username": this.keyword
+            },
+            method: "GET"
+          }).then(
+            res => {
+              this.tableData = res.data.data;
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              });
+            },
+            err => {
+              console.log("err :", err);
+            }
+          );
+        }
+      },
+      //删除用户
+      handleDelete(row, index) {
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.req({
+            url: "/auth/delete",
+            params: {
+              "username": row.username
+            },
+            method: "DELETE"
+          }).then(
+            res => {
+              this.tableData.splice(index,1);
+            },
+            err => {
+              console.log("err :", err);
+            }
+          );
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       // 创建用户
       handleCreate() {
@@ -183,8 +235,6 @@
         this.groupEdit = true;
         this.dialogType = 'new';
         this.user = Object.assign({}, defaultUser);
-        console.log()
-        this.groupValue = '';
         this.roleValue = '';
       },
       // 编辑用户信息
@@ -200,7 +250,7 @@
       confirmEdit(user){
         if (this.dialogType !== 'edit') {
           this.req({
-            url: "http://localhost:8001/auth/register",
+            url: "/auth/register",
             data: {
               "groupDescription": this.groupValue,
               "roleDescription": this.roleValue,
@@ -212,16 +262,23 @@
             method: "POST"
           }).then(
             res => {
-              alert(res.data.message);
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              });
             },
             err => {
               console.log("err :", err);
+              this.$message({
+                type: 'info',
+                message: '创建失败'
+              });
             }
           );
         }
         else {
           this.req({
-            url: "http://localhost:8001/auth/modify",
+            url: "/auth/modify",
             data: {
               "userId": user.userId,
               "groupDescription": this.groupValue,
@@ -234,10 +291,17 @@
             method: "POST"
           }).then(
             res => {
-              alert(res.data.message);
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              });
             },
             err => {
               console.log("err :", err);
+              this.$message({
+                type: 'info',
+                message: '修改失败'
+              });
             }
           );
         }

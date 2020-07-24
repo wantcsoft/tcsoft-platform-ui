@@ -24,13 +24,13 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    sockHost: 'localhost',
+    sockHost: '192.168.3.3',
     port: port,
     open: true,
     overlay: {
@@ -40,7 +40,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       '/admin': {
-        target: `http://localhost:8886/`,
+        target: `http://192.168.3.3:8888/`,
         changeOrigin: true,
         pathRewrite: {
         }
