@@ -34,7 +34,7 @@
                   v-for="item in groupData"
                   :key="item.groupDescription"
                   :label="item.groupDescription"
-                  :value="item.groupDescription">
+                  :value="item.groupId">
                 </el-option>
               </el-select>
             </template>
@@ -52,7 +52,7 @@
                   v-for="item in roleData"
                   :key="item.roleDescription"
                   :label="item.roleDescription"
-                  :value="item.roleDescription">
+                  :value="item.roleId">
                 </el-option>
               </el-select>
             </template>
@@ -98,7 +98,6 @@
     accountNonLocked: false,
     enabled: true
   }
-
   export default {
     data() {
       return {
@@ -107,6 +106,7 @@
         groupEdit: false,
         dialogType: 'new',
         tableData: [],
+        groupId: 0,
         groupData: [],
         groupValue: '',
         roleData: [],
@@ -116,40 +116,38 @@
     },
     //这个属性就可以，在里面声明初始化时要调用的方法即可
     mounted () {
-      this.getUsers();
       this.getGroups();
+      this.getUsers();
       this.getRoles();
     },
     methods: {
-      // 获取所有的用户信息
-      getUsers() {
-        let that = this;
+      //获取组的信息
+      getGroups() {
         this.req({
-          url: "/auth/queryAll",
+          url: "/security/group",
           method: "GET",
         }).then(
           res => {
-            if (res.data.code === 401){
-              this.$router.push({ path: "/401" });
-              // alert(res.data.message);
-            }else {
-              that.tableData = res.data.data;
-            }
+            this.groupData = res.data.data;
           },
           err => {
             console.log("err :", err);
           }
         );
       },
-      //获取组的信息
-      getGroups() {
-        let that = this;
+      // 获取所有的用户信息
+      getUsers() {
         this.req({
-          url: "/getGroups",
+          url: "/security/front/user",
           method: "GET",
         }).then(
           res => {
-            that.groupData = res.data.data;
+            if (res.data.code === 401){
+              console.log(res);
+              this.$router.push({ path: "/401" });
+            }else {
+              this.tableData = res.data.data;
+            }
           },
           err => {
             console.log("err :", err);
@@ -160,7 +158,7 @@
       getRoles () {
         let that = this;
         this.req({
-          url: "/getRoles",
+          url: "/security/getRoles",
           method: "GET",
         }).then(
           res => {
@@ -177,7 +175,7 @@
           this.getUsers();
         }else {
           this.req({
-            url: "/auth/queryByName",
+            url: "/security/front/user",
             params: {
               "username": this.keyword
             },
@@ -185,6 +183,7 @@
           }).then(
             res => {
               this.tableData = res.data.data;
+              console.log(res.data.data);
               this.$message({
                 type: 'success',
                 message: res.data.message
@@ -205,23 +204,27 @@
           center: true
         }).then(() => {
           this.req({
-            url: "/auth/delete",
-            params: {
-              "username": row.username
+            url: "/security/user",
+            data: {
+              "userId": row.userId
             },
-            method: "DELETE"
+            params: {
+              "type": "delete"
+            },
+            method: "POST"
           }).then(
             res => {
-              this.tableData.splice(index,1);
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
+              this.getUsers();
             },
             err => {
               console.log("err :", err);
             }
           );
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -250,10 +253,13 @@
       confirmEdit(user){
         if (this.dialogType !== 'edit') {
           this.req({
-            url: "/auth/register",
+            url: "/security/user",
+            params: {
+              "type": "create"
+            },
             data: {
-              "groupDescription": this.groupValue,
-              "roleDescription": this.roleValue,
+              "groupId": this.groupValue,
+              "roleId": this.roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,
@@ -266,6 +272,7 @@
                 type: 'success',
                 message: res.data.message
               });
+              this.getUsers();
             },
             err => {
               console.log("err :", err);
@@ -278,11 +285,14 @@
         }
         else {
           this.req({
-            url: "/auth/modify",
+            url: "/security/user",
+            params: {
+              "type": "modify"
+            },
             data: {
               "userId": user.userId,
-              "groupDescription": this.groupValue,
-              "roleDescription": this.roleValue,
+              "groupId": this.groupValue,
+              "roleId": this.roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,
@@ -295,6 +305,7 @@
                 type: 'success',
                 message: res.data.message
               });
+              this.getUsers();
             },
             err => {
               console.log("err :", err);

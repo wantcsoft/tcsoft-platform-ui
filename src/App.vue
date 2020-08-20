@@ -13,7 +13,7 @@ export default {
 </script>
 <style lang="scss">
 .root{
-  margin: 50px 25px 0px 25px
+  margin: 25px 25px 0px 25px
 }
 .my-flex{
   display: flex;

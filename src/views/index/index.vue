@@ -5,7 +5,6 @@
         <span style="font-size: 20px">欢迎来到TCSOFT大数据平台!</span>
       </el-card>
     </el-col>
-
     <el-row :gutter="12">
       <el-col :span="8">
         <el-card shadow="always">

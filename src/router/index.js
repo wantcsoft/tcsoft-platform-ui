@@ -31,12 +31,13 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  // 登录界面
+  // 平台管理登录界面
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
+  //开发者平台登录页面
   {
     path: '/develop',
     component: () => import('@/views/login/develop'),
@@ -47,74 +48,375 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     children: [{
-      path: '',
+      path: 'index',
       name: 'index',
       component: () => import('@/views/index/index'),
       meta: {
         title: '首页',
+        icon: 'index'
       }
     }]
   },
   // 用户管理
   {
-    path: '/',
+    path: '/manage',
     component: Layout,
+    meta: {
+      title: '人员管理',
+      icon: 'userManage'
+    },
     children: [{
-      path: 'manage',
-      name: 'manage',
-      component: () => import('@/views/manage/users'),
+      path: 'user',
+      name: 'user',
+      component: () => import('@/views/manage/people'),
       meta: {
-        title: '用户管理',
-        icon: 'usermanage'
+        title: '人员信息',
+        icon: 'people',
+      }
+    },{
+      path: 'hospital',
+      name: 'hospital',
+      component: () => import('@/views/manage/hospital'),
+      meta: {
+        title: '医院信息',
+        icon: 'hospital',
+      }
+    },{
+      path: 'role',
+      name: 'role',
+      component: () => import('@/views/manage/role'),
+      meta: {
+        title: '角色信息',
+        icon: 'role',
+      }
+    },{
+      path: 'authority',
+      name: 'authority',
+      component: () => import('@/views/manage/authority'),
+      meta: {
+        title: '权限信息',
+        icon: 'authority',
       }
     }]
   },
-  // 服务管理
-  // {
-  //   path: '/service01',
-  //   component: Layout,
-  //   redirect: '/service01/upload',
-  //   meta: {
-  //     title: 'xx服务',
-  //     icon: 'plane'
-  //   },
-  //   children: [{
-  //       path: 'check-template',
-  //       name: 'check-template',
-  //       component: () => import('@/views/service01/check-template'),
-  //       meta: {
-  //         title: '功能1',
-  //       }
-  //     },
-  //     {
-  //       path: 'logo',
-  //       name: 'logo',
-  //       component: () => import('@/views/service01/check-logo'),
-  //       meta: {
-  //         title: '功能2',
-  //       }
-  //     },
-  //     {
-  //       path: 'generate',
-  //       name: 'generate',
-  //       component: () => import('@/views/service01/generate'),
-  //       meta: {
-  //         title: '功能3',
-  //       }
-  //     },
-  //     {
-  //       path: 'check',
-  //       name: 'check',
-  //       component: () => import('@/views/service01/check'),
-  //       meta: {
-  //         title: '功能4',
-  //       }
-  //     },
-  //   ]
-  // },
+  // 系统配置
+  {
+    path: '/setting',
+    component: Layout,
+    redirect: 'setting',
+    meta: {
+      title: '系统设置',
+      icon: 'setting'
+    },
+    children: [{
+        path: 'actionCode',
+        name: 'actionCode',
+        component: () => import('@/views/setting/actionCode'),
+        meta: {
+          title: 'actionCode',
+        }
+      },
+      {
+        path: 'ageType',
+        name: 'ageType',
+        component: () => import('@/views/setting/ageType'),
+        meta: {
+          title: 'ageType',
+        }
+      },
+      {
+        path: 'auditState',
+        name: 'auditState',
+        component: () => import('@/views/setting/auditState'),
+        meta: {
+          title: 'auditState',
+        }
+      },
+      {
+        path: 'chemistryContrast',
+        name: 'chemistryContrast',
+        component: () => import('@/views/setting/chemistryContrast'),
+        meta: {
+          title: 'chemistryContrast',
+        }
+      },
+      {
+        path: 'comparisonInfo',
+        name: 'comparisonInfo',
+        component: () => import('@/views/setting/comparisonInfo'),
+        meta: {
+          title: 'comparisonInfo',
+        }
+      },
+      {
+        path: 'comparisonType',
+        name: 'comparisonType',
+        component: () => import('@/views/setting/comparisonType'),
+        meta: {
+          title: 'comparisonType',
+        }
+      },
+      {
+        path: 'confirmState',
+        name: 'confirmState',
+        component: () => import('@/views/setting/confirmState'),
+        meta: {
+          title: 'confirmState',
+        }
+      },
+      {
+        path: 'dataType',
+        name: 'dataType',
+        component: () => import('@/views/setting/dataType'),
+        meta: {
+          title: 'dataType',
+        }
+      },
+      {
+        path: 'hospitalInfo',
+        name: 'hospitalInfo',
+        component: () => import('@/views/setting/hospitalInfo'),
+        meta: {
+          title: 'hospitalInfo',
+        }
+      },
+      {
+        path: 'instrument',
+        name: 'instrument',
+        component: () => import('@/views/setting/instrument'),
+        meta: {
+          title: 'instrument',
+        }
+      },
+      {
+        path: 'instrumentAlternateType',
+        name: 'instrumentAlternateType',
+        component: () => import('@/views/setting/instrumentAlternateType'),
+        meta: {
+          title: 'instrumentAlternateType',
+        }
+      },
+      {
+        path: 'instrumentGroup',
+        name: 'instrumentGroup',
+        component: () => import('@/views/setting/instrumentGroup'),
+        meta: {
+          title: 'instrumentGroup',
+        }
+      },
+      {
+        path: 'instrumentType',
+        name: 'instrumentType',
+        component: () => import('@/views/setting/instrumentType'),
+        meta: {
+          title: 'instrumentType',
+        }
+      },
+      {
+        path: 'lineType',
+        name: 'lineType',
+        component: () => import('@/views/setting/lineType'),
+        meta: {
+          title: 'lineType',
+        }
+      },
+      {
+        path: 'lotSet',
+        name: 'lotSet',
+        component: () => import('@/views/setting/lotSet'),
+        meta: {
+          title: 'lotSet',
+        }
+      },
+      {
+        path: 'material',
+        name: 'material',
+        component: () => import('@/views/setting/material'),
+        meta: {
+          title: 'material',
+        }
+      },
+      {
+        path: 'patientType',
+        name: 'patientType',
+        component: () => import('@/views/setting/patientType'),
+        meta: {
+          title: 'patientType',
+        }
+      },
+      {
+        path: 'prepLinkAbortCode',
+        name: 'prepLinkAbortCode',
+        component: () => import('@/views/setting/prepLinkAbortCode'),
+        meta: {
+          title: 'prepLinkAbortCode',
+        }
+      },
+      {
+        path: 'prepLinkErrorCode',
+        name: 'prepLinkErrorCode',
+        component: () => import('@/views/setting/prepLinkErrorCode'),
+        meta: {
+          title: 'prepLinkErrorCode',
+        }
+      },
+      {
+        path: 'resultRange',
+        name: 'resultRange',
+        component: () => import('@/views/setting/resultRange'),
+        meta: {
+          title: 'resultRange',
+        }
+      },
+      {
+        path: 'resultType',
+        name: 'resultType',
+        component: () => import('@/views/setting/resultType'),
+        meta: {
+          title: 'resultType',
+        }
+      },
+      {
+        path: 'resultUnit',
+        name: 'resultUnit',
+        component: () => import('@/views/setting/resultUnit'),
+        meta: {
+          title: 'resultUnit',
+        }
+      },
+      {
+        path: 'rule',
+        name: 'rule',
+        component: () => import('@/views/setting/rule'),
+        meta: {
+          title: 'rule',
+        }
+      },
+      {
+        path: 'ruleFunction',
+        name: 'ruleFunction',
+        component: () => import('@/views/setting/ruleFunction'),
+        meta: {
+          title: 'ruleFunction',
+        }
+      },
+      {
+        path: 'ruleGroup',
+        name: 'ruleGroup',
+        component: () => import('@/views/setting/ruleGroup'),
+        meta: {
+          title: 'ruleGroup',
+        }
+      },
+      {
+        path: 'ruleParam',
+        name: 'ruleParam',
+        component: () => import('@/views/setting/ruleParam'),
+        meta: {
+          title: 'ruleParam',
+        }
+      },
+      {
+        path: 'ruleType',
+        name: 'ruleType',
+        component: () => import('@/views/setting/ruleType'),
+        meta: {
+          title: 'ruleType',
+        }
+      },
+      {
+        path: 'sampleEvent',
+        name: 'sampleEvent',
+        component: () => import('@/views/setting/sampleEvent'),
+        meta: {
+          title: 'sampleEvent',
+        }
+      },
+      {
+        path: 'sampleState',
+        name: 'sampleState',
+        component: () => import('@/views/setting/sampleState'),
+        meta: {
+          title: 'sampleState',
+        }
+      },
+      {
+        path: 'sampleStatus',
+        name: 'sampleStatus',
+        component: () => import('@/views/setting/sampleStatus'),
+        meta: {
+          title: 'sampleStatus',
+        }
+      },
+      {
+        path: 'sampleType',
+        name: 'sampleType',
+        component: () => import('@/views/setting/sampleType'),
+        meta: {
+          title: 'sampleType',
+        }
+      },
+      {
+        path: 'sexType',
+        name: 'sexType',
+        component: () => import('@/views/setting/sexType'),
+        meta: {
+          title: 'sexType',
+        }
+      },
+      {
+        path: 'testItemDeltaCheck',
+        name: 'testItemDeltaCheck',
+        component: () => import('@/views/setting/testItemDeltaCheck'),
+        meta: {
+          title: 'testItemDeltaCheck',
+        }
+      },
+      {
+        path: 'testItemGroup',
+        name: 'testItemGroup',
+        component: () => import('@/views/setting/testItemGroup'),
+        meta: {
+          title: 'testItemGroup',
+        }
+      },
+      {
+        path: 'testItemGroupItem',
+        name: 'testItemGroupItem',
+        component: () => import('@/views/setting/testItemGroupItem'),
+        meta: {
+          title: 'testItemGroupItem',
+        }
+      },
+      {
+        path: 'testItemInfo',
+        name: 'testItemInfo',
+        component: () => import('@/views/setting/testItemInfo'),
+        meta: {
+          title: 'testItemInfo',
+        }
+      },
+      {
+        path: 'testItemType',
+        name: 'testItemType',
+        component: () => import('@/views/setting/testItemType'),
+        meta: {
+          title: 'testItemType',
+        }
+      },
+      {
+        path: 'testType',
+        name: 'testType',
+        component: () => import('@/views/setting/testType'),
+        meta: {
+          title: 'testType',
+        }
+      }
+    ]
+  },
   // 服务管理
   {
-    path: '/laboratory',
+    path: '/',
     component: Layout,
     redirect: '/laboratory',
     meta: {
@@ -153,20 +455,6 @@ export const constantRoutes = [
     component: () => import('@/views/401'),
     hidden: true
   },
-  //测试页面
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   children: [{
-  //     path: 'test',
-  //     name: 'test',
-  //     component: () => import('@/views/test/test'),
-  //     meta: {
-  //       title: '测试',
-  //     }
-  //   }]
-  // },
-
   // 404 页面一定要放在最后 !!!
   {
     path: '*',

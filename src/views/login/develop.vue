@@ -80,7 +80,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="confirmEdit(user)">确认</el-button>
+        <el-button type="primary" @click="confirmEdit(developUser)">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -144,36 +144,36 @@ export default {
       });
     },
     handleLogin() {
-      // let that = this;
-      // this.loading = true;
-      // this.req({
-      //   url: "/auth",
-      //   data: {
-      //     username: that.loginForm.username,
-      //     password: that.loginForm.password
-      //   },
-      //   method: "POST"
-      // }).then(
-      //   res => {
-      //     localStorage.setItem("hasLogin", true);
-      //     localStorage.setItem("token", res.data.data);
-      //     // localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
-      //     this.$router.push({ path: "/" });
-      //     this.$message({
-      //       type: 'success',
-      //       message: '登陆成功'
-      //     });
-      //
-      //   },
-      //   err => {
-      //     console.log("err :", err);
-      //     this.$message({
-      //       type: 'info',
-      //       message: '登陆失败'
-      //     });
-      //   }
-      // );
-      // this.loading = false;
+      let that = this;
+      this.loading = true;
+      this.req({
+        url: "/security/develop/login",
+        data: {
+          username: that.loginForm.username,
+          password: that.loginForm.password
+        },
+        method: "POST"
+      }).then(
+        res => {
+          localStorage.setItem("hasLogin", true);
+          localStorage.setItem("token", res.data.data);
+          window.location.href = 'http://www.docway.net/project/1XAKe0Sq7yz/share/1XApQnfnNFQ';
+          // this.$router.push({ path: "/develop/test" });
+          this.$message({
+            type: 'success',
+            message: res.data.data.message
+          });
+
+        },
+        err => {
+          console.log("err :", err);
+          this.$message({
+            type: 'info',
+            message: '登陆失败'
+          });
+        }
+      );
+      this.loading = false;
     },
     handleRegistered() {
       this.dialogVisible = true;
@@ -181,6 +181,32 @@ export default {
     toManagerPlat() {
       this.$router.push({ path: "/login" });
     },
+    confirmEdit(developUser) {
+      this.req({
+        url: "/security/develop/register",
+        data: {
+          username: developUser.username,
+          password: developUser.password
+        },
+        method: "POST"
+      }).then(
+        res => {
+          console.log(res.data);
+          this.$message({
+            type: 'success',
+            message: res.data.message
+          });
+        },
+        err => {
+          console.log("err :", err);
+          this.$message({
+            type: 'info',
+            message: '登陆失败'
+          });
+        }
+      );
+      this.loading = false;
+    }
   }
 };
 </script>

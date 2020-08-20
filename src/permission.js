@@ -20,7 +20,7 @@ router.beforeEach(async(to, from, next) => {
   if (hasLogin) {
     if (to.path === '/login') {
       // 从登录页面跳转到主页面
-      next({ path: '/' })
+      next({ path: '/index' })
       NProgress.done()
     } else {
       next()

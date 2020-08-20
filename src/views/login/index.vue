@@ -124,7 +124,7 @@ export default {
       let that = this;
       this.loading = true;
       this.req({
-        url: "/auth",
+        url: "/security/login",
         data: {
           username: that.loginForm.username,
           password: that.loginForm.password
@@ -135,12 +135,11 @@ export default {
           localStorage.setItem("hasLogin", true);
           localStorage.setItem("token", res.data.data);
           // localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: "/index" });
           this.$message({
             type: 'success',
             message: '登陆成功'
           });
-
         },
         err => {
           console.log("err :", err);
