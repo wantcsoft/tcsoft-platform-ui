@@ -45,10 +45,10 @@ export const constantRoutes = [
   },
   //首页
   {
-    path: '/',
+    path: '/index',
     component: Layout,
     children: [{
-      path: 'index',
+      path: '',
       name: 'index',
       component: () => import('@/views/index/index'),
       meta: {
@@ -416,7 +416,7 @@ export const constantRoutes = [
   },
   // 服务管理
   {
-    path: '/',
+    path: '/service',
     component: Layout,
     redirect: '/laboratory',
     meta: {

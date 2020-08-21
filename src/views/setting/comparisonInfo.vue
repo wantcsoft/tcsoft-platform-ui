@@ -5,16 +5,16 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="instrumentTypeId" label="instrumentTypeId"></el-table-column>
-      <el-table-column prop="comparisonTypeId" label="comparisonTypeId"></el-table-column>
+      <el-table-column prop="instrumentTypeName" label="instrumentTypeName"></el-table-column>
+      <el-table-column prop="comparisonTypeName" label="comparisonTypeName" width="180%"></el-table-column>
       <el-table-column prop="instrumentInfo" label="instrumentInfo"></el-table-column>
       <el-table-column prop="comparedTypeId" label="comparedTypeId"></el-table-column>
-      <el-table-column  label="Edit">
+      <el-table-column  label="Edit" width="90%">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleComparisonInfoEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
-      <el-table-column  label="Delete">
+      <el-table-column  label="Delete" width="90%">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -51,6 +51,10 @@
     data() {
       return {
         tableData: [],
+        instrumentTypeData: [],
+        instrumentTypeValue: '',
+        comparisonTypeData: [],
+        comparisonTypeValue: '',
         comparisonInfoDialogVisible: false,
         comparisonInfo: {},
         type: ''
@@ -58,6 +62,8 @@
     },
     mounted () {
       this.getComparisonInfos();
+      this.getInstrumentTypes();
+      this.getComparisonTypes();
     },
     methods: {
       getComparisonInfos() {
@@ -85,10 +91,41 @@
           }
         );
       },
+      getInstrumentTypes() {
+
+      },
+      getComparisonTypes() {
+        this.req({
+          url: "/setting/comparisonType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.comparisonTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleComparisonInfoEdit(row) {
         this.comparisonInfoDialogVisible = true;
         this.comparisonInfo = row;
         this.type = 'edit';
+        this.instrumentTypeValue = row.instrumentTypeId;
+        this.comparisonTypeValue = row.comparisonTypeId;
       },
       confirmComparisonInfoEdit(comparisonInfo) {
         if (this.type === 'edit'){
@@ -154,6 +191,8 @@
         this.comparisonInfoDialogVisible = true;
         this.comparisonInfo = {};
         this.type = 'create';
+        this.instrumentTypeValue = '';
+        this.comparisonTypeValue = '';
       },
       handleDelete(comparisonInfo) {
         this.$confirm('此操作将永久删除该comparisonInfo, 是否继续?', '提示', {

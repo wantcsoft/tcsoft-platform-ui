@@ -5,7 +5,6 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="hospitalId" label="HospitalId"></el-table-column>
       <el-table-column prop="hospitalName" label="HospitalName"></el-table-column>
       <el-table-column prop="hospitalCode" label="HospitalCode"></el-table-column>
       <el-table-column prop="location" label="location"></el-table-column>

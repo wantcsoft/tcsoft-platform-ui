@@ -12,7 +12,6 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="actionId" label="actionId"></el-table-column>
       <el-table-column prop="actionFlag" label="actionFlag"></el-table-column>
       <el-table-column prop="enabled" :formatter="formatEnable" label="IsEnable"></el-table-column>
       <el-table-column  label="Edit">

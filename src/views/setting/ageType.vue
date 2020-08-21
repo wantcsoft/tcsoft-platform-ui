@@ -12,7 +12,6 @@
   </div>
 
   <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-    <el-table-column prop="ageTypeId" label="AgeTypeId"></el-table-column>
     <el-table-column prop="ageTypeName" label="AgeTypeName"></el-table-column>
     <el-table-column prop="permitted" :formatter="formatEnable" label="IsPermitted"></el-table-column>
     <el-table-column  label="Edit">

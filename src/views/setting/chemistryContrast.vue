@@ -12,9 +12,9 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="testItemId" label="TestItemID"></el-table-column>
-      <el-table-column prop="sampleTypeId" label="SampleTypeID"></el-table-column>
-      <el-table-column prop="instrumentId" label="InstrumentID"></el-table-column>
+      <el-table-column prop="testItemCode" label="testItemCode"></el-table-column>
+      <el-table-column prop="sampleTypeName" label="sampleTypeName" width="150"></el-table-column>
+      <el-table-column prop="instrumentName" label="instrumentName"></el-table-column>
       <el-table-column prop="chemCode" label="ChemCode"></el-table-column>
       <el-table-column prop="programmed" :formatter="formatProgramme" label="IsProgrammed"></el-table-column>
       <el-table-column  label="Edit">
@@ -31,14 +31,41 @@
 
     <el-dialog :visible.sync="chemistryContrastDialogVisible" title="ChemistryContrast" width="30%">
       <el-form :model="chemistryContrast" label-width="40%" label-position="left">
-        <el-form-item label="testItemId">
-          <el-input v-model="chemistryContrast.testItemId" placeholder="testItemId" style="width: 90%"/>
+        <el-form-item label="testItemCode">
+          <template>
+            <el-select v-model="testItemInfoValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in testItemInfoData"
+                :key="item.testItemCode"
+                :label="item.testItemCode"
+                :value="item.testItemId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
-        <el-form-item label="sampleTypeId">
-          <el-input v-model="chemistryContrast.sampleTypeId" placeholder="sampleTypeId" style="width: 90%"/>
+        <el-form-item label="sampleTypeName">
+          <template>
+            <el-select v-model="sampleTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in sampleTypeData"
+                :key="item.sampleTypeName"
+                :label="item.sampleTypeName"
+                :value="item.sampleTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
-        <el-form-item label="instrumentId">
-          <el-input v-model="chemistryContrast.instrumentId" placeholder="instrumentId" style="width: 90%"/>
+        <el-form-item label="instrumentName">
+          <template>
+            <el-select v-model="instrumentValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in instrumentData"
+                :key="item.instrumentName"
+                :label="item.instrumentName"
+                :value="item.instrumentId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
         <el-form-item label="chemCode">
           <el-input v-model="chemistryContrast.chemCode" placeholder="chemCode" style="width: 90%"/>
@@ -65,6 +92,13 @@
     data() {
       return {
         tableData: [],
+        testItemInfoData: [],
+        testItemInfoValue: '',
+        sampleTypeData: [],
+        sampleTypeValue: '',
+        instrumentData: [],
+        instrumentValue: '',
+
         chemistryContrastDialogVisible: false,
         chemistryContrast: {},
         hospitalValue: '',
@@ -87,8 +121,9 @@
           },
         }).then(
           res => {
+            console.log(res.data.data);
             if (res.data.code === 200) {
-              const list = res.data.data
+              const list = res.data.data;
               for (let i = 0; i < list.length; i++) {
                 this.hospitalOptions.push(
                   {
@@ -99,6 +134,86 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getChemistryContrasts(list[0].hospitalId);
+              this.getTestItemInfo(list[0].hospitalId);
+              this.getSampleType(list[0].hospitalId);
+              this.getInstrument(list[0].hospitalId);
+
+              this.handleDatas();
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getTestItemInfo(hospitalId) {
+        this.req({
+          url: "/setting/testItemInfo",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.testItemInfoData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getSampleType(hospitalId) {
+        this.req({
+          url: "/setting/sampleType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.sampleTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getInstrument(hospitalId) {
+        this.req({
+          url: "/setting/instrument",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.instrumentData = res.data.data;
             }
           },
           err => {
@@ -135,10 +250,20 @@
           }
         );
       },
+
+      handleDatas() {
+        for (let i = 0; i < list.length; i++){
+          this.ChemistryContrastData.push();
+        }
+      },
+
       handleChemistryContrastEdit(row) {
         this.chemistryContrastDialogVisible = true;
         this.chemistryContrast = row;
         this.type = 'edit';
+        this.testItemInfoValue = row.testItemId;
+        this.sampleTypeValue = row.sampleTypeId;
+        this.instrumentValue = row.instrumentId;
       },
       confirmChemistryContrastEdit(chemistryContrast) {
         if (this.type === 'edit'){
@@ -209,6 +334,9 @@
         this.chemistryContrastDialogVisible = true;
         this.chemistryContrast = {};
         this.type = 'create';
+        this.testItemInfoValue = '';
+        this.sampleTypeValue = '';
+        this.instrumentValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -258,6 +386,9 @@
       },
       selectDown() {
         this.getChemistryContrasts(this.hospitalValue[0]);
+        this.getTestItemInfo(this.hospitalValue[0]);
+        this.getSampleType(this.hospitalValue[0]);
+        this.getInstrument(this.hospitalValue[0]);
       },
     }
   }

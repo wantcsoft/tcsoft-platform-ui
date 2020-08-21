@@ -12,7 +12,6 @@
     </div>
 
     <el-table :data="tableData" stripe >
-      <el-table-column prop="hospitalId" label="hospitalId" width="90%"></el-table-column>
       <el-table-column prop="instrumentTypeId" label="instrumentTypeId" width="150%"></el-table-column>
       <el-table-column prop="instrumentGroupId" label="instrumentGroupId" width="150%"></el-table-column>
       <el-table-column prop="instrumentName" label="instrumentName" width="140%"></el-table-column>

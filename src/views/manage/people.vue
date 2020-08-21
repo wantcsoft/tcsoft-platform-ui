@@ -71,7 +71,6 @@
               inactive-text="未启用">
             </el-switch>
           </el-form-item>
-
         </el-form>
         <div style="text-align:right;">
           <el-button type="danger" @click="dialogVisible=false">取消</el-button>
