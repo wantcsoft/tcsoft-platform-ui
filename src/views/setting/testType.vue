@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="testTypeName" label="TestTypeName"></el-table-column>
+      <el-table-column prop="testTypeName" label="TestType"></el-table-column>
       <el-table-column prop="resultStatMinutes" label="resultStatMinutes"></el-table-column>
       <el-table-column prop="permitted" :formatter="formatEnable" label="IsPermitted"></el-table-column>
       <el-table-column  label="Edit">
@@ -29,8 +29,8 @@
 
     <el-dialog :visible.sync="testTypeDialogVisible" title="TestType" width="30%">
       <el-form :model="testType" label-width="40%" label-position="left">
-        <el-form-item label="TestTypeName">
-          <el-input v-model="testType.testTypeName" placeholder="TestTypeName" style="width: 90%"/>
+        <el-form-item label="TestType">
+          <el-input v-model="testType.testTypeName" placeholder="TestType" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="resultStatMinutes">
           <el-input v-model="testType.resultStatMinutes" placeholder="resultStatMinutes" style="width: 90%"/>

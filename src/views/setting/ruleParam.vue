@@ -7,7 +7,7 @@
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
       <el-table-column prop="paramCode" label="paramCode"></el-table-column>
       <el-table-column prop="paramDesc" label="paramDesc"></el-table-column>
-      <el-table-column prop="dataTypeId" label="dataTypeId"></el-table-column>
+      <el-table-column prop="dataTypeName" label="dataType"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleRuleParamEdit(scope.row)">编辑</el-button>
@@ -28,13 +28,22 @@
         <el-form-item label="paramDesc">
           <el-input v-model="ruleParam.paramDesc" placeholder="paramDesc" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="dataTypeId">
-          <el-input v-model="ruleParam.dataTypeId" placeholder="dataTypeId" style="width: 90%"/>
+        <el-form-item label="dataType">
+          <template>
+            <el-select v-model="dataTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in dataTypeData"
+                :key="item.dataTypeName"
+                :label="item.dataTypeName"
+                :value="item.dataTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="ruleParamDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmRuleParamEdit(ruleParam)">save</el-button>
+        <el-button type="primary" @click="confirmRuleParamEdit(ruleParam, dataTypeValue)">save</el-button>
       </div>
     </el-dialog>
 
@@ -47,6 +56,8 @@
     data() {
       return {
         tableData: [],
+        dataTypeData: [],
+        dataTypeValue: '',
         ruleParamDialogVisible: false,
         ruleParam: {},
         type: ''
@@ -54,6 +65,7 @@
     },
     mounted () {
       this.getRuleParams();
+      this.getDataTypes();
     },
     methods: {
       getRuleParams() {
@@ -81,12 +93,38 @@
           }
         );
       },
+      getDataTypes() {
+        this.req({
+          url: "/setting/dataType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.dataTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
       handleRuleParamEdit(row) {
         this.ruleParamDialogVisible = true;
         this.ruleParam = row;
         this.type = 'edit';
+        this.dataTypeValue = row.dataTypeId;
       },
-      confirmRuleParamEdit(ruleParam) {
+      confirmRuleParamEdit(ruleParam, dataTypeValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/ruleParam",
@@ -97,7 +135,7 @@
               "ruleParamId": ruleParam.ruleParamId,
               "paramCode": ruleParam.paramCode,
               "paramDesc": ruleParam.paramDesc,
-              "dataTypeId": ruleParam.dataTypeId,
+              "dataTypeId": dataTypeValue,
             },
             method: "POST"
           }).then(
@@ -124,7 +162,7 @@
             data: {
               "paramCode": ruleParam.paramCode,
               "paramDesc": ruleParam.paramDesc,
-              "dataTypeId": ruleParam.dataTypeId,
+              "dataTypeId": dataTypeValue,
             },
             method: "POST"
           }).then(
@@ -149,6 +187,7 @@
         this.ruleParamDialogVisible = true;
         this.ruleParam = {};
         this.type = 'create';
+        this.dataTypeValue = '';
       },
       handleDelete(ruleParam) {
         this.$confirm('此操作将永久删除该ruleParam, 是否继续?', '提示', {

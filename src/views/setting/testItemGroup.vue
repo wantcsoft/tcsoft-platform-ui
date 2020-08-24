@@ -13,7 +13,7 @@
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
       <el-table-column prop="groupName" label="groupName"></el-table-column>
-      <el-table-column prop="instrumentGroupId" label="instrumentGroupId"></el-table-column>
+      <el-table-column prop="instrumentGroupName" label="instrumentGroup"></el-table-column>
       <el-table-column prop="comment" label="comment"></el-table-column>
       <el-table-column prop="enabled" :formatter="formatEnable" label="IsEnabled"></el-table-column>
       <el-table-column  label="Edit">
@@ -33,8 +33,17 @@
         <el-form-item label="groupName">
           <el-input v-model="testItemGroup.groupName" placeholder="groupName" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="instrumentGroupId">
-          <el-input v-model="testItemGroup.instrumentGroupId" placeholder="instrumentGroupId" style="width: 90%"/>
+        <el-form-item label="instrumentGroup">
+          <template>
+            <el-select v-model="instrumentGroupValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in instrumentGroupData"
+                :key="item.instrumentGroupName"
+                :label="item.instrumentGroupName"
+                :value="item.instrumentGroupId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
         <el-form-item label="comment">
           <el-input v-model="testItemGroup.comment" placeholder="comment" style="width: 90%"/>
@@ -49,7 +58,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="testItemGroupDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmTestItemGroupEdit(testItemGroup)">save</el-button>
+        <el-button type="primary" @click="confirmTestItemGroupEdit(testItemGroup,instrumentGroupValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -61,6 +70,8 @@
     data() {
       return {
         tableData: [],
+        instrumentGroupData: [],
+        instrumentGroupValue: '',
         testItemGroupDialogVisible: false,
         testItemGroup: {},
         hospitalValue: '',
@@ -95,6 +106,7 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getTestItemGroups(list[0].hospitalId);
+              this.getInstrumentGroups(list[0].hospitalId);
             }
           },
           err => {
@@ -131,12 +143,38 @@
           }
         );
       },
+      getInstrumentGroups(hospitalId) {
+        this.req({
+          url: "/setting/instrumentGroup",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.instrumentGroupData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
       handleTestItemGroupEdit(row) {
         this.testItemGroupDialogVisible = true;
         this.testItemGroup = row;
         this.type = 'edit';
+        this.instrumentGroupValue = row.instrumentGroupId;
       },
-      confirmTestItemGroupEdit(testItemGroup) {
+      confirmTestItemGroupEdit(testItemGroup,instrumentGroupValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/testItemGroup",
@@ -146,7 +184,7 @@
             data: {
               "testItemGroupId": testItemGroup.testItemGroupId,
               "groupName": testItemGroup.groupName,
-              "instrumentGroupId": testItemGroup.instrumentGroupId,
+              "instrumentGroupId": instrumentGroupValue,
               "comment": testItemGroup.comment,
               "enabled": testItemGroup.enabled,
             },
@@ -176,7 +214,7 @@
             data: {
               "hospitalId": this.hospitalValue[0],
               "groupName": testItemGroup.groupName,
-              "instrumentGroupId": testItemGroup.instrumentGroupId,
+              "instrumentGroupId": instrumentGroupValue,
               "comment": testItemGroup.comment,
               "enabled": testItemGroup.enabled,
             },
@@ -203,6 +241,7 @@
         this.testItemGroupDialogVisible = true;
         this.testItemGroup = {};
         this.type = 'create';
+        this.instrumentGroupValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -249,6 +288,7 @@
       },
       selectDown() {
         this.getTestItemGroups(this.hospitalValue[0]);
+        this.getInstrumentGroups(this.hospitalValue[0]);
       },
     }
   }

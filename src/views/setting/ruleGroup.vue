@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="ruleGroupName" label="RuleGroupName"></el-table-column>
+      <el-table-column prop="ruleGroupName" label="RuleGroup"></el-table-column>
       <el-table-column prop="default" :formatter="formatDefault" label="IsDefault"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
@@ -28,8 +28,8 @@
 
     <el-dialog :visible.sync="ruleGroupDialogVisible" title="RuleGroup" width="30%">
       <el-form :model="ruleGroup" label-width="40%" label-position="left">
-        <el-form-item label="RuleGroupName">
-          <el-input v-model="ruleGroup.ruleGroupName" placeholder="RuleGroupName" style="width: 90%"/>
+        <el-form-item label="RuleGroup">
+          <el-input v-model="ruleGroup.ruleGroupName" placeholder="RuleGroup" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="IsDefault">
           <el-switch

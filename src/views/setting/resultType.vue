@@ -5,7 +5,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="resultTypeName" label="ComparisonTypeName"></el-table-column>
+      <el-table-column prop="resultTypeName" label="resultType"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleComparisonTypeEdit(scope.row)">编辑</el-button>
@@ -20,8 +20,8 @@
 
     <el-dialog :visible.sync="resultTypeDialogVisible" title="resultType" width="40%">
       <el-form :model="resultType" label-width="40%" label-position="left">
-        <el-form-item label="resultTypeName">
-          <el-input v-model="resultType.resultTypeName" placeholder="resultTypeName" style="width: 90%"/>
+        <el-form-item label="resultType">
+          <el-input v-model="resultType.resultTypeName" placeholder="resultType" style="width: 90%"/>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">

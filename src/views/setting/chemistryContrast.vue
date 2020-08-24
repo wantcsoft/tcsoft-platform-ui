@@ -80,7 +80,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="chemistryContrastDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmChemistryContrastEdit(chemistryContrast)">save</el-button>
+        <el-button type="primary" @click="confirmChemistryContrastEdit(chemistryContrast, testItemInfoValue, sampleTypeValue, instrumentValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -251,12 +251,6 @@
         );
       },
 
-      handleDatas() {
-        for (let i = 0; i < list.length; i++){
-          this.ChemistryContrastData.push();
-        }
-      },
-
       handleChemistryContrastEdit(row) {
         this.chemistryContrastDialogVisible = true;
         this.chemistryContrast = row;
@@ -265,7 +259,7 @@
         this.sampleTypeValue = row.sampleTypeId;
         this.instrumentValue = row.instrumentId;
       },
-      confirmChemistryContrastEdit(chemistryContrast) {
+      confirmChemistryContrastEdit(chemistryContrast, testItemInfoValue, sampleTypeValue, instrumentValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/chemistryContrast",
@@ -274,9 +268,9 @@
             },
             data: {
               "hospitalId": this.hospitalValue[0],
-              "testItemId": chemistryContrast.testItemId,
-              "sampleTypeId": chemistryContrast.sampleTypeId,
-              "instrumentId": chemistryContrast.instrumentId,
+              "testItemId": testItemInfoValue,
+              "sampleTypeId": sampleTypeValue,
+              "instrumentId": instrumentValue,
               "chemCode": chemistryContrast.chemCode,
               "programmed": chemistryContrast.programmed,
             },
@@ -305,9 +299,9 @@
             },
             data: {
               "hospitalId": this.hospitalValue[0],
-              "testItemId": chemistryContrast.testItemId,
-              "sampleTypeId": chemistryContrast.sampleTypeId,
-              "instrumentId": chemistryContrast.instrumentId,
+              "testItemId": testItemInfoValue,
+              "sampleTypeId": sampleTypeValue,
+              "instrumentId": instrumentValue,
               "chemCode": chemistryContrast.chemCode,
               "programmed": chemistryContrast.programmed,
             },

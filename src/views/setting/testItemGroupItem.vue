@@ -5,8 +5,8 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="testItemGroupId" label="testItemGroupId"></el-table-column>
-      <el-table-column prop="testItemId" label="testItemId"></el-table-column>
+      <el-table-column prop="groupName" label="testItemGroup"></el-table-column>
+      <el-table-column prop="testItemCode" label="testItemCode"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleTestItemGroupItemEdit(scope.row)">编辑</el-button>
@@ -21,9 +21,19 @@
 
     <el-dialog :visible.sync="testItemGroupItemDialogVisible" title="testItemGroupItem" width="40%">
       <el-form :model="testItemGroupItem" label-width="40%" label-position="left">
-        <el-form-item label="testItemGroupId">
-          <el-input v-model="testItemGroupItem.testItemGroupId" placeholder="testItemGroupId" style="width: 90%"/>
+        <el-form-item label="groupName">
+          <template>
+            <el-select v-model="groupName" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in instrumentGroupData"
+                :key="item.instrumentGroupName"
+                :label="item.instrumentGroupName"
+                :value="item.instrumentGroupId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
+
         <el-form-item label="testItemId">
           <el-input v-model="testItemGroupItem.testItemId" placeholder="testItemId" style="width: 90%"/>
         </el-form-item>
@@ -43,6 +53,7 @@
     data() {
       return {
         tableData: [],
+
         testItemGroupItemDialogVisible: false,
         testItemGroupItem: {},
         type: ''

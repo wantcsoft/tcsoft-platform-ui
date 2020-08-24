@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="instrumentTypeName" label="instrumentTypeName"></el-table-column>
+      <el-table-column prop="instrumentTypeName" label="instrumentType"></el-table-column>
       <el-table-column prop="graphSupport" :formatter="formatGraphSupport" label="isGraphSupport"></el-table-column>
       <el-table-column prop="enable" :formatter="formatEnable" label="isEnable"></el-table-column>
       <el-table-column  label="Edit">
@@ -29,7 +29,7 @@
 
     <el-dialog :visible.sync="instrumentTypeDialogVisible" title="instrumentType" width="40%">
       <el-form :model="instrumentType" label-width="40%" label-position="left">
-        <el-form-item label="instrumentTypeName">
+        <el-form-item label="instrumentType">
           <el-input v-model="instrumentType.instrumentTypeName" placeholder="instrumentTypeName" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="IsGraphSupport">
@@ -238,7 +238,7 @@
       },
       formatEnable(row){
         let ret = ''
-        if (row.enable) {
+        if (row.enabled) {
           ret = "启用"
         } else {
           ret = "未启用"

@@ -5,7 +5,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="sexTypeName" label="sexTypeName"></el-table-column>
+      <el-table-column prop="sexTypeName" label="sexType"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleSexTypeEdit(scope.row)">编辑</el-button>
@@ -20,8 +20,8 @@
 
     <el-dialog :visible.sync="sexTypeDialogVisible" title="sexType" width="40%">
       <el-form :model="sexType" label-width="40%" label-position="left">
-        <el-form-item label="sexTypeName">
-          <el-input v-model="sexType.sexTypeName" placeholder="sexTypeName" style="width: 90%"/>
+        <el-form-item label="sexType">
+          <el-input v-model="sexType.sexTypeName" placeholder="sexType" style="width: 90%"/>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">

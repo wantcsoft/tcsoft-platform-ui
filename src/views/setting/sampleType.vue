@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="sampleTypeName" label="SampleTypeName"></el-table-column>
+      <el-table-column prop="sampleTypeName" label="SampleType"></el-table-column>
       <el-table-column prop="permitted" :formatter="formatPermitted" label="IsPermitted"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
@@ -28,8 +28,8 @@
 
     <el-dialog :visible.sync="sampleTypeDialogVisible" title="SampleType" width="30%">
       <el-form :model="sampleType" label-width="40%" label-position="left">
-        <el-form-item label="SampleTypeName">
-          <el-input v-model="sampleType.sampleTypeName" placeholder="SampleTypeName" style="width: 90%"/>
+        <el-form-item label="SampleType">
+          <el-input v-model="sampleType.sampleTypeName" placeholder="SampleType" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="IsPermitted">
           <el-switch
