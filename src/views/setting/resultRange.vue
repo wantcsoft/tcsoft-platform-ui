@@ -11,19 +11,19 @@
       <el-button type="primary" size="mini" @click="handleCreate" style="margin-left: 7%">Create</el-button>
     </div>
 
-    <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="lowerAge" label="lowerAge" width="100%"></el-table-column>
-      <el-table-column prop="upperAge" label="upperAge" width="100%"></el-table-column>
-      <el-table-column prop="ageTypeId" label="ageTypeId" width="100%"></el-table-column>
-      <el-table-column prop="refLowerValue" label="refLowerValue" width="120%"></el-table-column>
-      <el-table-column prop="refUpperValue" label="refUpperValue" width="120%"></el-table-column>
-      <el-table-column prop="sampleTypeId" label="sampleTypeId" width="120%"></el-table-column>
-      <el-table-column prop="affirmLowerValue" label="affirmLowerValue" width="150%"></el-table-column>
-      <el-table-column prop="affirmUpperValue" label="affirmUpperValue" width="150%"></el-table-column>
-      <el-table-column prop="reportLowerValue" label="reportLowerValue" width="150%"></el-table-column>
-      <el-table-column prop="reportUpperValue" label="reportUpperValue" width="150%"></el-table-column>
-      <el-table-column prop="default" :formatter="formatDefault" label="IsDefault" width="100%"></el-table-column>
-      <el-table-column prop="enabled" :formatter="formatEnable" label="IsEnabled" width="100%"></el-table-column>
+    <el-table :data="tableData" stripe size="mini" style="width: 100%">
+      <el-table-column prop="ageTypeName" label="ageType" width="70%"></el-table-column>
+      <el-table-column prop="sampleTypeName" label="sampleType" width="90%"></el-table-column>
+      <el-table-column prop="lowerAge" label="lowerAge" width="80%"></el-table-column>
+      <el-table-column prop="upperAge" label="upperAge" width="80%"></el-table-column>
+      <el-table-column prop="refLowerValue" label="refLowerValue" width="110%"></el-table-column>
+      <el-table-column prop="refUpperValue" label="refUpperValue" width="110%"></el-table-column>
+      <el-table-column prop="affirmLowerValue" label="affirmLowerValue" width="130%"></el-table-column>
+      <el-table-column prop="affirmUpperValue" label="affirmUpperValue" width="130%"></el-table-column>
+      <el-table-column prop="reportLowerValue" label="reportLowerValue" width="130%"></el-table-column>
+      <el-table-column prop="reportUpperValue" label="reportUpperValue" width="130%"></el-table-column>
+      <el-table-column prop="default" :formatter="formatDefault" label="IsDefault" width="80%"></el-table-column>
+      <el-table-column prop="enabled" :formatter="formatEnable" label="IsEnabled" width="80%"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
           <el-button size="mini" type="primary" @click="handleResultRangeEdit(scope.row)">编辑</el-button>
@@ -38,35 +38,69 @@
 
     <el-dialog :visible.sync="resultRangeDialogVisible" title="ResultRange" width="30%">
       <el-form :model="resultRange" label-width="40%" label-position="left">
+        <el-form-item label="ageType">
+          <template>
+            <el-select v-model="ageTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in ageTypeData"
+                :key="item.ageTypeName"
+                :label="item.ageTypeName"
+                :value="item.ageTypeId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+        <el-form-item label="sampleType">
+          <template>
+            <el-select v-model="sampleTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in sampleTypeData"
+                :key="item.sampleTypeName"
+                :label="item.sampleTypeName"
+                :value="item.sampleTypeId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
         <el-form-item label="lowerAge">
-          <el-input v-model="resultRange.lowerAge" placeholder="lowerAge" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.lowerAge" :min="1" :max="999999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="upperAge">
-          <el-input v-model="resultRange.upperAge" placeholder="upperAge" style="width: 90%"/>
-        </el-form-item>
-        <el-form-item label="ageTypeId">
-          <el-input v-model="resultRange.ageTypeId" placeholder="ageTypeId" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.upperAge" :min="1" :max="999999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="refLowerValue">
-          <el-input v-model="resultRange.refLowerValue" placeholder="refLowerValue" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.refLowerValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="refUpperValue">
-          <el-input v-model="resultRange.refUpperValue" placeholder="refUpperValue" style="width: 90%"/>
-        </el-form-item>
-        <el-form-item label="sampleTypeId">
-          <el-input v-model="resultRange.sampleTypeId" placeholder="sampleTypeId" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.refUpperValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="affirmLowerValue">
-          <el-input v-model="resultRange.affirmLowerValue" placeholder="affirmLowerValue" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.affirmLowerValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="affirmUpperValue">
-          <el-input v-model="resultRange.affirmUpperValue" placeholder="affirmUpperValue" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.affirmUpperValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="reportLowerValue">
-          <el-input v-model="resultRange.reportLowerValue" placeholder="reportLowerValue" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.reportLowerValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="reportUpperValue">
-          <el-input v-model="resultRange.reportUpperValue" placeholder="reportUpperValue" style="width: 90%"/>
+          <template>
+            <el-input-number v-model="resultRange.reportUpperValue" :precision="2" :step="0.1" :max="99999999"></el-input-number>
+          </template>
         </el-form-item>
         <el-form-item label="IsDefault">
           <el-switch
@@ -85,7 +119,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="resultRangeDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmResultRangeEdit(resultRange)">save</el-button>
+        <el-button type="primary" @click="confirmResultRangeEdit(resultRange, sampleTypeValue, ageTypeValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -97,6 +131,11 @@
     data() {
       return {
         tableData: [],
+        ageTypeData: [],
+        ageTypeValue: '',
+        sampleTypeData: [],
+        sampleTypeValue: '',
+
         resultRangeDialogVisible: false,
         resultRange: {},
         hospitalValue: '',
@@ -131,6 +170,8 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getResultRanges(list[0].hospitalId);
+              this.getSampleTypes(list[0].hospitalId);
+              this.getAgeTypes(list[0].hospitalId);
             }
           },
           err => {
@@ -167,12 +208,65 @@
           }
         );
       },
+      getSampleTypes(hospitalId) {
+        this.req({
+          url: "/setting/sampleType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.sampleTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getAgeTypes(hospitalId) {
+        this.req({
+          url: "/setting/ageType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.ageTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleResultRangeEdit(row) {
         this.resultRangeDialogVisible = true;
         this.resultRange = row;
         this.type = 'edit';
+        this.sampleTypeValue = row.sampleTypeId;
+        this.ageTypeValue = row.ageTypeId;
       },
-      confirmResultRangeEdit(resultRange) {
+      confirmResultRangeEdit(resultRange, sampleTypeValue, ageTypeValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/resultRange",
@@ -183,10 +277,10 @@
               "resultRangeId": resultRange.resultRangeId,
               "lowerAge": resultRange.lowerAge,
               "upperAge": resultRange.upperAge,
-              "ageTypeId": resultRange.ageTypeId,
+              "ageTypeId": ageTypeValue,
               "refLowerValue": resultRange.refLowerValue,
               "refUpperValue": resultRange.refUpperValue,
-              "sampleTypeId": resultRange.sampleTypeId,
+              "sampleTypeId": sampleTypeValue,
               "affirmLowerValue": resultRange.affirmLowerValue,
               "affirmUpperValue": resultRange.affirmUpperValue,
               "reportLowerValue": resultRange.reportLowerValue,
@@ -221,10 +315,10 @@
               "hospitalId": this.hospitalValue[0],
               "lowerAge": resultRange.lowerAge,
               "upperAge": resultRange.upperAge,
-              "ageTypeId": resultRange.ageTypeId,
+              "ageTypeId": ageTypeValue,
               "refLowerValue": resultRange.refLowerValue,
               "refUpperValue": resultRange.refUpperValue,
-              "sampleTypeId": resultRange.sampleTypeId,
+              "sampleTypeId": sampleTypeValue,
               "affirmLowerValue": resultRange.affirmLowerValue,
               "affirmUpperValue": resultRange.affirmUpperValue,
               "reportLowerValue": resultRange.reportLowerValue,
@@ -255,6 +349,8 @@
         this.resultRangeDialogVisible = true;
         this.resultRange = {};
         this.type = 'create';
+        this.sampleTypeValue = '';
+        this.ageTypeValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -310,6 +406,8 @@
       },
       selectDown() {
         this.getResultRanges(this.hospitalValue[0]);
+        this.getSampleTypes(this.hospitalValue[0]);
+        this.getAgeTypes(this.hospitalValue[0]);
       },
     }
   }

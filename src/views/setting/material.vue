@@ -13,7 +13,7 @@
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
       <el-table-column prop="materialName" label="materialName"></el-table-column>
-      <el-table-column prop="sampleTypeId" label="sampleTypeId"></el-table-column>
+      <el-table-column prop="sampleTypeName" label="sampleType"></el-table-column>
       <el-table-column prop="periodStart" label="periodStart"></el-table-column>
       <el-table-column prop="periodEnd" label="periodEnd"></el-table-column>
       <el-table-column prop="active" :formatter="formatActive" label="isActive"></el-table-column>
@@ -34,8 +34,17 @@
         <el-form-item label="MaterialName">
           <el-input v-model="material.materialName" placeholder="MaterialName" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="sampleTypeId">
-          <el-input v-model="material.sampleTypeId" placeholder="sampleTypeId" style="width: 90%"/>
+        <el-form-item label="sampleType">
+          <template>
+            <el-select v-model="sampleTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in sampleTypeData"
+                :key="item.sampleTypeName"
+                :label="item.sampleTypeName"
+                :value="item.sampleTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
         <el-form-item label="periodStart">
           <el-date-picker
@@ -75,6 +84,9 @@
     data() {
       return {
         tableData: [],
+        sampleTypeData: [],
+        sampleTypeValue: '',
+
         materialDialogVisible: false,
         material: {},
         hospitalValue: '',
@@ -109,6 +121,7 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getMaterials(list[0].hospitalId);
+              this.getSampleTypes(list[0].hospitalId);
             }
           },
           err => {
@@ -145,10 +158,38 @@
           }
         );
       },
+      getSampleTypes(hospitalId) {
+        this.req({
+          url: "/setting/sampleType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.sampleTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleMaterialEdit(row) {
         this.materialDialogVisible = true;
         this.material = row;
         this.type = 'edit';
+        this.sampleTypeValue = row.sampleTypeId;
+
       },
       confirmMaterialEdit(material) {
         if (this.type === 'edit'){
@@ -220,6 +261,7 @@
         this.materialDialogVisible = true;
         this.material = {};
         this.type = 'create';
+        this.sampleTypeValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -258,14 +300,15 @@
       formatActive(row){
         let ret = ''
         if (row.active) {
-          ret = "许可"
+          ret = "激活"
         } else {
-          ret = "未许可"
+          ret = "未激活"
         }
         return ret;
       },
       selectDown() {
         this.getMaterials(this.hospitalValue[0]);
+        this.getSampleTypes(this.hospitalValue[0]);
       },
     }
   }

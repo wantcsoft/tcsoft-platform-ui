@@ -33,7 +33,7 @@
           <el-input v-model="testType.testTypeName" placeholder="TestType" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="resultStatMinutes">
-          <el-input v-model="testType.resultStatMinutes" placeholder="resultStatMinutes" style="width: 90%"/>
+          <el-input-number v-model="testType.resultStatMinutes" :min="1" :max="999999999"></el-input-number>
         </el-form-item>
         <el-form-item label="IsPermitted">
           <el-switch

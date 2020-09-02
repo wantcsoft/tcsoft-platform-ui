@@ -5,7 +5,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="sampleStatusName" label="sampleStatusName"></el-table-column>
+      <el-table-column prop="sampleStatusName" label="sampleStatus"></el-table-column>
       <el-table-column prop="statusFlag" label="statusFlag"></el-table-column>
       <el-table-column prop="parentStatusId" label="parentStatusId"></el-table-column>
       <el-table-column prop="instrumentRelated" :formatter="formatInstrumentRelated" label="instrumentRelated"></el-table-column>
@@ -23,14 +23,14 @@
 
     <el-dialog :visible.sync="sampleStatusDialogVisible" title="sampleStatus" width="40%">
       <el-form :model="sampleStatus" label-width="40%" label-position="left">
-        <el-form-item label="sampleStatusName">
-          <el-input v-model="sampleStatus.sampleStatusName" placeholder="sampleStatusName" style="width: 90%"/>
+        <el-form-item label="sampleStatus">
+          <el-input v-model="sampleStatus.sampleStatusName" placeholder="sampleStatus" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="statusFlag">
           <el-input v-model="sampleStatus.statusFlag" placeholder="statusFlag" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="parentStatusId">
-          <el-input v-model="sampleStatus.parentStatusId" placeholder="parentStatusId" style="width: 90%"/>
+          <el-input-number v-model="sampleStatus.parentStatusId" :min="1" :max="999999999"></el-input-number>
         </el-form-item>
         <el-form-item label="instrumentRelated">
           <el-switch

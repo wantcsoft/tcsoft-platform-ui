@@ -5,17 +5,17 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="ruleFunctionName" label="ruleFunctionName"></el-table-column>
-      <el-table-column prop="paramCount" label="paramCount"></el-table-column>
-      <el-table-column prop="firstParamDataType" label="firstParamDataType" width="200%"></el-table-column>
-      <el-table-column prop="secondParamDataType" label="secondParamDataType" width="200%"></el-table-column>
-      <el-table-column prop="comment" label="comment"></el-table-column>
-      <el-table-column  label="Edit">
+      <el-table-column prop="ruleFunctionName" label="ruleFunction" width="120%"></el-table-column>
+      <el-table-column prop="paramCount" label="paramCount" width="120%"></el-table-column>
+      <el-table-column prop="firstParam" label="firstParamDataType" width="180%"></el-table-column>
+      <el-table-column prop="secondParam" label="secondParamDataType" width="180%"></el-table-column>
+      <el-table-column prop="comment" label="comment" width="110%"></el-table-column>
+      <el-table-column  label="Edit" width="90%">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleRuleFunctionEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
-      <el-table-column  label="Delete">
+      <el-table-column  label="Delete" width="90%">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -24,17 +24,35 @@
 
     <el-dialog :visible.sync="ruleFunctionDialogVisible" title="ruleFunction" width="40%">
       <el-form :model="ruleFunction" label-width="40%" label-position="left">
-        <el-form-item label="RuleFunctionName">
+        <el-form-item label="RuleFunction">
           <el-input v-model="ruleFunction.ruleFunctionName" placeholder="RuleFunctionName" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="paramCount">
           <el-input v-model="ruleFunction.paramCount" placeholder="paramCount" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="firstParamDataType">
-          <el-input v-model="ruleFunction.firstParamDataType" placeholder="firstParamDataType" style="width: 90%"/>
+          <template>
+            <el-select v-model="firstDataTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in dataTypeData"
+                :key="item.dataTypeName"
+                :label="item.dataTypeName"
+                :value="item.dataTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
         <el-form-item label="secondParamDataType">
-          <el-input v-model="ruleFunction.secondParamDataType" placeholder="secondParamDataType" style="width: 90%"/>
+          <template>
+            <el-select v-model="secondDataTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in dataTypeData"
+                :key="item.dataTypeName"
+                :label="item.dataTypeName"
+                :value="item.dataTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
         <el-form-item label="comment">
           <el-input v-model="ruleFunction.comment" placeholder="comment" style="width: 90%"/>
@@ -43,7 +61,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="ruleFunctionDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmRuleFunctionEdit(ruleFunction)">save</el-button>
+        <el-button type="primary" @click="confirmRuleFunctionEdit(ruleFunction, firstDataTypeValue, secondDataTypeValue)">save</el-button>
       </div>
     </el-dialog>
 
@@ -56,6 +74,10 @@
     data() {
       return {
         tableData: [],
+        dataTypeData: [],
+        firstDataTypeValue: '',
+        secondDataTypeValue: '',
+
         ruleFunctionDialogVisible: false,
         ruleFunction: {},
         type: ''
@@ -63,6 +85,7 @@
     },
     mounted () {
       this.getRuleFunctions();
+      this.getDataTypes();
     },
     methods: {
       getRuleFunctions() {
@@ -90,12 +113,39 @@
           }
         );
       },
+      getDataTypes() {
+        this.req({
+          url: "/setting/dataType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.dataTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
       handleRuleFunctionEdit(row) {
         this.ruleFunctionDialogVisible = true;
         this.ruleFunction = row;
         this.type = 'edit';
+        this.firstDataTypeValue = row.firstParamDataType;
+        this.secondDataTypeValue = row.secondParamDataType;
       },
-      confirmRuleFunctionEdit(ruleFunction) {
+      confirmRuleFunctionEdit(ruleFunction, firstDataTypeValue, secondDataTypeValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/ruleFunction",
@@ -106,8 +156,8 @@
               "ruleFunctionId": ruleFunction.ruleFunctionId,
               "ruleFunctionName": ruleFunction.ruleFunctionName,
               "paramCount": ruleFunction.paramCount,
-              "firstParamDataType": ruleFunction.firstParamDataType,
-              "secondParamDataType": ruleFunction.secondParamDataType,
+              "firstParamDataType": firstDataTypeValue,
+              "secondParamDataType": secondDataTypeValue,
               "comment": ruleFunction.comment,
             },
             method: "POST"
@@ -135,8 +185,8 @@
             data: {
               "ruleFunctionName": ruleFunction.ruleFunctionName,
               "paramCount": ruleFunction.paramCount,
-              "firstParamDataType": ruleFunction.firstParamDataType,
-              "secondParamDataType": ruleFunction.secondParamDataType,
+              "firstParamDataType": firstDataTypeValue,
+              "secondParamDataType": secondDataTypeValue,
               "comment": ruleFunction.comment,
             },
             method: "POST"
@@ -162,6 +212,8 @@
         this.ruleFunctionDialogVisible = true;
         this.ruleFunction = {};
         this.type = 'create';
+        this.firstDataTypeValue = '';
+        this.secondDataTypeValue = '';
       },
       handleDelete(ruleFunction) {
         this.$confirm('此操作将永久删除该ruleFunction, 是否继续?', '提示', {

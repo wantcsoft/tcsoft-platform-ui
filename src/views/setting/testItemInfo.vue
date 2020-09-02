@@ -11,21 +11,21 @@
       <el-button type="primary" size="mini" @click="handleCreate" style="margin-left: 7%">Create</el-button>
     </div>
 
-    <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="testItemCode" label="testItemCode" width="120%"></el-table-column>
-      <el-table-column prop="testItemName" label="testItemName" width="120%"></el-table-column>
-      <el-table-column prop="printOrder" label="printOrder" width="120%"></el-table-column>
-      <el-table-column prop="qCItem" label="isQCItem" width="120%"></el-table-column>
-      <el-table-column prop="accuracy" label="accuracy" width="120%"></el-table-column>
-      <el-table-column prop="ageRelated" :formatter="formatAgeRelated" label="isAgeRelated" width="120%"></el-table-column>
-      <el-table-column prop="sexRelated" :formatter="formatSexRelated" label="isSexRelated" width="120%"></el-table-column>
-      <el-table-column prop="sampleTypeRelated" :formatter="formatSampleTypeRelater" label="isSampleTypeRelated" width="180%"></el-table-column>
-      <el-table-column prop="unitId" label="unitId"></el-table-column>
-      <el-table-column prop="order" :formatter="formatOrder" label="isOrder"></el-table-column>
-      <el-table-column prop="testItemTypeId" label="testItemTypeId" width="120%"></el-table-column>
-      <el-table-column prop="resultTypeId" label="resultTypeId" width="120%"></el-table-column>
-      <el-table-column prop="programmed" :formatter="formatProgrammed" label="isProgrammed" width="120%"></el-table-column>
-      <el-table-column prop="enabled" :formatter="formatEnable" label="isEnabled" width="120%"></el-table-column>
+    <el-table :data="tableData" size="mini" stripe style="width: 100%">
+      <el-table-column prop="testItemCode" label="testItemCode" width="100%"></el-table-column>
+      <el-table-column prop="testItemName" label="testItemName" width="100%"></el-table-column>
+      <el-table-column prop="printOrder" label="printOrder" width="80%"></el-table-column>
+      <el-table-column prop="qCItem" :formatter="formatQCItem" label="isQCItem" width="80%"></el-table-column>
+      <el-table-column prop="accuracy" label="accuracy" width="80%"></el-table-column>
+      <el-table-column prop="ageRelated" :formatter="formatAgeRelated" label="isAgeRelated" width="100%"></el-table-column>
+      <el-table-column prop="sexRelated" :formatter="formatSexRelated" label="isSexRelated" width="100%"></el-table-column>
+      <el-table-column prop="sampleTypeRelated" :formatter="formatSampleTypeRelater" label="isSampleTypeRelated" width="150%"></el-table-column>
+      <el-table-column prop="unitId" label="unitId" width="70%"></el-table-column>
+      <el-table-column prop="ordac" :formatter="formatOrdac" label="isOrdac" width="70%"></el-table-column>
+      <el-table-column prop="testItemTypeId" label="testItemTypeId" width="110%"></el-table-column>
+      <el-table-column prop="resultTypeId" label="resultTypeId" width="100%"></el-table-column>
+      <el-table-column prop="programmed" :formatter="formatProgrammed" label="isProgrammed" width="110%"></el-table-column>
+      <el-table-column prop="enabled" :formatter="formatEnable" label="isEnabled" width="100%"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
           <el-button size="mini" type="primary" @click="handleTestItemInfoEdit(scope.row)">编辑</el-button>
@@ -79,9 +79,9 @@
         <el-form-item label="unitId">
           <el-input v-model="testItemInfo.unitId" placeholder="unitId" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="isOrder">
+        <el-form-item label="isOrdac">
           <el-switch
-            v-model="testItemInfo.order"
+            v-model="testItemInfo.ordac"
             active-text="订阅"
             inactive-text="未订阅">
           </el-switch>
@@ -205,7 +205,7 @@
               "type": "modify"
             },
             data: {
-              "testItemID": testItemInfo.testItemID,
+              "testItemId": testItemInfo.testItemId,
               "testItemCode": testItemInfo.testItemCode,
               "testItemName": testItemInfo.testItemName,
               "printOrder": testItemInfo.printOrder,
@@ -215,7 +215,7 @@
               "sexRelated": testItemInfo.sexRelated,
               "sampleTypeRelated": testItemInfo.sampleTypeRelated,
               "unitId": testItemInfo.unitId,
-              "order": testItemInfo.order,
+              "ordac": testItemInfo.ordac,
               "testItemTypeId": testItemInfo.testItemTypeId,
               "resultTypeId": testItemInfo.resultTypeId,
               "programmed": testItemInfo.programmed,
@@ -255,7 +255,7 @@
               "sexRelated": testItemInfo.sexRelated,
               "sampleTypeRelated": testItemInfo.sampleTypeRelated,
               "unitId": testItemInfo.unitId,
-              "order": testItemInfo.order,
+              "ordac": testItemInfo.ordac,
               "testItemTypeId": testItemInfo.testItemTypeId,
               "resultTypeId": testItemInfo.resultTypeId,
               "programmed": testItemInfo.programmed,
@@ -328,6 +328,15 @@
         }
         return ret;
       },
+      formatQCItem(row) {
+        let ret = ''
+        if (row.qCItem) {
+          ret = "是";
+        } else {
+          ret = "否";
+        }
+        return ret;
+      },
       formatAgeRelated(row) {
         let ret = ''
         if (row.ageRelated) {
@@ -355,9 +364,10 @@
         }
         return ret;
       },
-      formatOrder(row) {
+      formatOrdac(row) {
+        console.log(row);
         let ret = ''
-        if (row.order) {
+        if (row.ordac) {
           ret = "订阅"
         } else {
           ret = "未订阅"

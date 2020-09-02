@@ -144,6 +144,7 @@
                 type: 'success',
                 message: res.data.message
               });
+              this.getRuleParams();
             },
             err => {
               console.log("err :", err);

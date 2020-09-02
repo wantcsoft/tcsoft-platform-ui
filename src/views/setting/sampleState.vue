@@ -4,51 +4,30 @@
       <el-button type="primary" size="mini" @click="handleCreate" style="margin-left: 80%">Create</el-button>
     </div>
 
-    <el-table :data="tableData" stripe style="margin-left: 2%; width: 96%">
-      <el-table-column prop="parentSampleState" label="parentSampleState"></el-table-column>
-      <el-table-column prop="sampleStateName" label="sampleStateName"></el-table-column>
-      <el-table-column prop="samplePosition" :formatter="formatSamplePosition" label="IsSamplePosition"></el-table-column>
-      <el-table-column prop="instrumentRelated" :formatter="formatInstrumentRelated" label="instrumentRelated"></el-table-column>
-      <el-table-column prop="displayOrder" label="displayOrder"></el-table-column>
-      <el-table-column prop="stateDisplayName" label="stateDisplayName"></el-table-column>
-      <el-table-column prop="defaultDisplayName" label="defaultDisplayName"></el-table-column>
-      <el-table-column prop="bindInstrumentId" label="bindInstrumentId"></el-table-column>
-      <el-table-column  label="Edit">
+    <el-table :data="tableData" size="mini" stripe style="width: 100%">
+      <el-table-column prop="sampleStateName" label="sampleStateName" width="130%"></el-table-column>
+      <el-table-column prop="stateDisplayName" label="stateDisplayName" width="130%"></el-table-column>
+      <el-table-column prop="defaultDisplayName" label="defaultDisplayName" width="140%"></el-table-column>
+      <el-table-column prop="parentSampleState" label="parentSampleState" width="130%"></el-table-column>
+      <el-table-column prop="displayOrder" label="displayOrder" width="100%"></el-table-column>
+      <el-table-column prop="bindInstrumentId" label="bindInstrumentId" width="130%"></el-table-column>
+      <el-table-column prop="samplePosition" :formatter="formatSamplePosition" label="IsSamplePosition" width="130%"></el-table-column>
+      <el-table-column prop="instrumentRelated" :formatter="formatInstrumentRelated" label="instrumentRelated" width="130%"></el-table-column>
+      <el-table-column  label="Edit" width="70%">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleSampleStateEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
-      <el-table-column  label="Delete">
+      <el-table-column  label="Delete" width="70%">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog :visible.sync="sampleStateDialogVisible" title="sampleState" width="40%">
       <el-form :model="sampleState" label-width="40%" label-position="left">
-        <el-form-item label="parentSampleState">
-          <el-input v-model="sampleState.parentSampleState" placeholder="parentSampleState" style="width: 90%"/>
-        </el-form-item>
         <el-form-item label="sampleStateName">
           <el-input v-model="sampleState.sampleStateName" placeholder="sampleStateName" style="width: 90%"/>
-        </el-form-item>
-        <el-form-item label="IsSamplePosition">
-          <el-switch
-            v-model="material.samplePosition"
-            active-text="是"
-            inactive-text="否">
-          </el-switch>
-        </el-form-item>
-        <el-form-item label="instrumentRelated">
-          <el-switch
-            v-model="material.instrumentRelated"
-            active-text="是"
-            inactive-text="否">
-          </el-switch>
-        </el-form-item>
-        <el-form-item label="displayOrder">
-          <el-input v-model="sampleState.displayOrder" placeholder="displayOrder" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="stateDisplayName">
           <el-input v-model="sampleState.stateDisplayName" placeholder="stateDisplayName" style="width: 90%"/>
@@ -56,9 +35,30 @@
         <el-form-item label="defaultDisplayName">
           <el-input v-model="sampleState.defaultDisplayName" placeholder="defaultDisplayName" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="bindInstrumentId">
-          <el-input v-model="sampleState.bindInstrumentId" placeholder="bindInstrumentId" style="width: 90%"/>
+        <el-form-item label="parentSampleState">
+          <el-input-number v-model="sampleState.parentSampleState" :min="1" :max="999999999"></el-input-number>
         </el-form-item>
+        <el-form-item label="displayOrder">
+          <el-input-number v-model="sampleState.displayOrder" :min="1" :max="999999999"></el-input-number>
+        </el-form-item>
+        <el-form-item label="bindInstrumentId">
+          <el-input-number v-model="sampleState.bindInstrumentId" :min="1" :max="999999999"></el-input-number>
+        </el-form-item>
+        <el-form-item label="IsSamplePosition">
+          <el-switch
+            v-model="sampleState.samplePosition"
+            active-text="是"
+            inactive-text="否">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="instrumentRelated">
+          <el-switch
+            v-model="sampleState.instrumentRelated"
+            active-text="是"
+            inactive-text="否">
+          </el-switch>
+        </el-form-item>
+
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="sampleStateDialogVisible=false">cancel</el-button>
@@ -98,6 +98,7 @@
           res => {
             if (res.data.code === 200) {
               this.tableData = res.data.data;
+              console.log(res);
             }
           },
           err => {
@@ -224,7 +225,7 @@
       },
       formatSamplePosition(row) {
         let ret = ''
-        if (row.active) {
+        if (row.samplePosition) {
           ret = "是"
         } else {
           ret = "否"
@@ -233,7 +234,7 @@
       },
       formatInstrumentRelated(row) {
         let ret = ''
-        if (row.active) {
+        if (row.instrumentRelated) {
           ret = "是"
         } else {
           ret = "否"

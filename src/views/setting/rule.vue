@@ -11,18 +11,18 @@
       <el-button type="primary" size="mini" @click="handleCreate" style="margin-left: 7%">Create</el-button>
     </div>
 
-    <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="ruleGroupId" label="ruleGroupId" width="120%"></el-table-column>
-      <el-table-column prop="ruleName" label="ruleName" width="100%"></el-table-column>
-      <el-table-column prop="instrumentGroupId" label="instrumentGroupId" width="150%"></el-table-column>
-      <el-table-column prop="ruleTypeId" label="ruleTypeId" width="100%"></el-table-column>
-      <el-table-column prop="condition" label="condition" width="100%"></el-table-column>
-      <el-table-column prop="actionTrue" label="actionTrue" width="100%"></el-table-column>
-      <el-table-column prop="actionFalse" label="actionFalse" width="100%"></el-table-column>
-      <el-table-column prop="comment" label="comment" width="100%"></el-table-column>
-      <el-table-column prop="ruleOrder" label="ruleOrder" width="100%"></el-table-column>
-      <el-table-column prop="visible" :formatter="formatVisible" label="isVisible" width="100%"></el-table-column>
-      <el-table-column prop="ruleOnly" :formatter="formatRuleOnly" label="isRuleOnly" width="100%"></el-table-column>
+    <el-table :data="tableData" size="mini" stripe style="width: 100%">
+      <el-table-column prop="ruleName" label="ruleName" width="80%"></el-table-column>
+      <el-table-column prop="ruleGroupName" label="ruleGroup" width="80%"></el-table-column>
+      <el-table-column prop="ruleTypeName" label="ruleType" width="70%"></el-table-column>
+      <el-table-column prop="instrumentGroupName" label="instrumentGroup" width="120%"></el-table-column>
+      <el-table-column prop="condition" label="condition" width="80%"></el-table-column>
+      <el-table-column prop="actionTrue" label="actionTrue" width="90%"></el-table-column>
+      <el-table-column prop="actionFalse" label="actionFalse" width="90%"></el-table-column>
+      <el-table-column prop="comment" label="comment" width="80%"></el-table-column>
+      <el-table-column prop="ruleOrder" label="ruleOrder" width="80%"></el-table-column>
+      <el-table-column prop="visible" :formatter="formatVisible" label="isVisible" width="80%"></el-table-column>
+      <el-table-column prop="ruleOnly" :formatter="formatRuleOnly" label="isRuleOnly" width="90%"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
           <el-button size="mini" type="primary" @click="handleRuleEdit(scope.row)">编辑</el-button>
@@ -37,18 +37,46 @@
 
     <el-dialog :visible.sync="ruleDialogVisible" title="Rule" width="40%">
       <el-form :model="rule" label-width="40%" label-position="left">
-        <el-form-item label="ruleGroupId">
-          <el-input v-model="rule.ruleGroupId" placeholder="ruleGroupId" style="width: 90%"/>
-        </el-form-item>
         <el-form-item label="ruleName">
           <el-input v-model="rule.ruleName" placeholder="ruleName" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="instrumentGroupId">
-          <el-input v-model="rule.instrumentGroupId" placeholder="instrumentGroupId" style="width: 90%"/>
+        <el-form-item label="ruleGroup">
+          <template>
+            <el-select v-model="ruleGroupValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in ruleGroupData"
+                :key="item.ruleGroupName"
+                :label="item.ruleGroupName"
+                :value="item.ruleGroupId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
-        <el-form-item label="ruleTypeId">
-          <el-input v-model="rule.ruleTypeId" placeholder="ruleTypeId" style="width: 90%"/>
+        <el-form-item label="ruleType">
+          <template>
+            <el-select v-model="ruleTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in ruleTypeData"
+                :key="item.ruleTypeName"
+                :label="item.ruleTypeName"
+                :value="item.ruleTypeId">
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
+        <el-form-item label="instrumentGroup">
+          <template>
+            <el-select v-model="instrumentGroupValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in instrumentGroupData"
+                :key="item.instrumentGroupName"
+                :label="item.instrumentGroupName"
+                :value="item.instrumentGroupId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+
         <el-form-item label="condition">
           <el-input v-model="rule.condition" placeholder="condition" style="width: 90%"/>
         </el-form-item>
@@ -62,7 +90,7 @@
           <el-input v-model="rule.comment" placeholder="comment" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="ruleOrder">
-          <el-input v-model="rule.ruleOrder" placeholder="ruleOrder" style="width: 90%"/>
+          <el-input-number v-model="rule.ruleOrder" :min="1" :max="999999999"></el-input-number>
         </el-form-item>
         <el-form-item label="isVisible">
           <el-switch
@@ -81,7 +109,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="ruleDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmRuleEdit(rule)">save</el-button>
+        <el-button type="primary" @click="confirmRuleEdit(rule, instrumentGroupValue, ruleGroupValue, ruleTypeValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -93,6 +121,13 @@
     data() {
       return {
         tableData: [],
+        ruleGroupData: [],
+        ruleGroupValue: '',
+        instrumentGroupData: [],
+        instrumentGroupValue: '',
+        ruleTypeData: [],
+        ruleTypeValue: '',
+
         ruleDialogVisible: false,
         rule: {},
         hospitalValue: '',
@@ -127,6 +162,9 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getRules(list[0].hospitalId);
+              this.getInstrumentGroups(list[0].hospitalId);
+              this.getRuleGroups(list[0].hospitalId);
+              this.getRuleTypes();
             }
           },
           err => {
@@ -164,12 +202,91 @@
           }
         );
       },
+      getRuleGroups(hospitalId) {
+        this.req({
+          url: "/setting/ruleGroup",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.ruleGroupData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getInstrumentGroups(hospitalId) {
+        this.req({
+          url: "/setting/instrumentGroup",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.instrumentGroupData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getRuleTypes() {
+        this.req({
+          url: "/setting/ruleType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.ruleTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleRuleEdit(row) {
         this.ruleDialogVisible = true;
         this.rule = row;
         this.type = 'edit';
+        this.instrumentGroupValue = row.instrumentGroupId;
+        this.ruleTypeValue = row.ruleTypeId;
+        this.ruleGroupValue = row.ruleGroupId;
       },
-      confirmRuleEdit(rule) {
+      confirmRuleEdit(rule, instrumentGroupValue, ruleGroupValue, ruleTypeValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/rule",
@@ -178,10 +295,10 @@
             },
             data: {
               "ruleId": rule.ruleId,
-              "ruleGroupId": rule.ruleGroupId,
+              "ruleGroupId": ruleGroupValue,
               "ruleName": rule.ruleName,
-              "instrumentGroupId": rule.instrumentGroupId,
-              "ruleTypeId": rule.ruleTypeId,
+              "instrumentGroupId": instrumentGroupValue,
+              "ruleTypeId": ruleTypeValue,
               "condition": rule.condition,
               "actionTrue": rule.actionTrue,
               "actionFalse": rule.actionFalse,
@@ -215,10 +332,10 @@
             },
             data: {
               "hospitalId": this.hospitalValue[0],
-              "ruleGroupId": rule.ruleGroupId,
+              "ruleGroupId": ruleGroupValue,
               "ruleName": rule.ruleName,
-              "instrumentGroupId": rule.instrumentGroupId,
-              "ruleTypeId": rule.ruleTypeId,
+              "instrumentGroupId": instrumentGroupValue,
+              "ruleTypeId": ruleTypeValue,
               "condition": rule.condition,
               "actionTrue": rule.actionTrue,
               "actionFalse": rule.actionFalse,
@@ -234,7 +351,7 @@
                 type: 'success',
                 message: res.data.message
               });
-              // this.getRules(this.hospitalValue[0]);
+              this.getRules(this.hospitalValue[0]);
             },
             err => {
               console.log("err :", err);
@@ -250,6 +367,9 @@
         this.ruleDialogVisible = true;
         this.rule = {};
         this.type = 'create';
+        this.instrumentGroupValue = '';
+        this.ruleTypeValue = '';
+        this.ruleGroupValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -305,6 +425,9 @@
       },
       selectDown() {
         this.getRules(this.hospitalValue[0]);
+        this.getInstrumentGroups(this.hospitalValue[0]);
+        this.getRuleGroups(this.hospitalValue[0]);
+        this.getRuleTypes();
       },
     }
   }

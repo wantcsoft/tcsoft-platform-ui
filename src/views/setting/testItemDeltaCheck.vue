@@ -32,7 +32,7 @@
           <el-input v-model="testItemDeltaCheck.formula" placeholder="formula" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="dayRange">
-          <el-input v-model="testItemDeltaCheck.dayRange" placeholder="dayRange" style="width: 90%"/>
+          <el-input-number v-model="testItemDeltaCheck.dayRange" :min="1" :max="999999999"></el-input-number>
         </el-form-item>
 
       </el-form>
