@@ -5,14 +5,16 @@
     </div>
     <div class="hospital-table">
       <el-table :data="tableData" stripe style="width: 100%">
-        <el-table-column prop="groupId" label="医院ID"></el-table-column>
         <el-table-column prop="group" label="医院代码"></el-table-column>
         <el-table-column prop="groupDescription" label="医院名称"></el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column  label="编辑">
+          <template slot-scope="scope" >
+            <el-button size="mini" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column  label="删除">
           <template slot-scope="scope">
-            <i class="el-icon-edit" @click="handleEdit(scope.row)"></i>
-            <span>&nbsp;&nbsp;</span>
-            <i class="el-icon-delete" @click="handleDelete(scope.row, scope.index)"></i>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,7 +73,7 @@
           );
         },
         //删除医院组
-        handleDelete(row, index) {
+        handleDelete(row) {
           this.$confirm('此操作将永久删除该医院, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -81,7 +83,7 @@
             this.req({
               url: "/security/group",
               data: {
-                "userId": row.userId
+                "groupId": row.groupId,
               },
               params: {
                 "type": "delete"

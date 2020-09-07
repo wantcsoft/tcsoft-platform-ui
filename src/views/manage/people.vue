@@ -15,16 +15,23 @@
         <el-table-column prop="roleDescription" label="角色"></el-table-column>
         <el-table-column prop="accountNonLocked" :formatter="formatLock" label="是否锁定"></el-table-column>
         <el-table-column prop="enabled" :formatter="formatEnable" label="是否启用"></el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column  label="权限">
+          <template slot-scope="scope" >
+            <el-button size="mini" type="primary" @click="handleAuthority(scope.row)">授权</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column  label="编辑">
+          <template slot-scope="scope" >
+            <el-button size="mini" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column  label="删除">
           <template slot-scope="scope">
-            <i class="el-icon-edit" @click="handleEdit(scope.row)"></i>
-            <span>&nbsp;&nbsp;</span>
-            <i class="el-icon-delete" @click="handleDelete(scope.row, scope.index)"></i>
-<!--            <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>-->
-<!--            <el-button type="text" size="small">删除</el-button>-->
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+
       <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新建用户'" width="30%">
         <el-form :model="user" label-width="80px" label-position="left">
           <el-form-item label="分组">
@@ -77,6 +84,16 @@
           <el-button type="primary" @click="confirmEdit(user)">确认</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog title="权限管理" :visible.sync="authorityDialogVisible" width="45%" center>
+        <template>
+          <el-transfer v-model="authorityValue" :data="authorityData" :titles="['所有权限', '已有权限']"></el-transfer>
+        </template>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="authorityDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
     <div class="page-button">
       <el-button-group>
@@ -102,14 +119,18 @@
       return {
         user: Object.assign({}, defaultUser),
         dialogVisible: false,
-        groupEdit: false,
+        authorityDialogVisible: false,
+        authorityData: [],
+        authorityValue: [],
+
         dialogType: 'new',
         tableData: [],
-        groupId: 0,
+
         groupData: [],
         groupValue: '',
         roleData: [],
         roleValue: '',
+
         keyword: ''
       };
     },
@@ -118,6 +139,7 @@
       this.getGroups();
       this.getUsers();
       this.getRoles();
+      this.getAuthority();
     },
     methods: {
       //获取组的信息
@@ -137,14 +159,11 @@
       // 获取所有的用户信息
       getUsers() {
         this.req({
-          url: "/security/front/user",
+          url: "/security/getUser",
           method: "GET",
         }).then(
           res => {
-            if (res.data.code === 401){
-              console.log(res);
-              this.$router.push({ path: "/401" });
-            }else {
+            if (res.data.code === 200){
               this.tableData = res.data.data;
             }
           },
@@ -153,15 +172,34 @@
           }
         );
       },
-      //获取权限的信息
+      //获取角色的信息
       getRoles () {
         let that = this;
         this.req({
-          url: "/security/getRoles",
+          url: "/security/getRole",
           method: "GET",
         }).then(
           res => {
             that.roleData = res.data.data;
+          },
+          err => {
+            console.log("err :", err);
+          }
+        );
+      },
+      // 获取权限信息
+      getAuthority() {
+        this.req({
+          url: "/security/authority",
+          method: "GET",
+        }).then(
+          res => {
+            for (let i=0; i<res.data.data.length; i++){
+              this.authorityData.push({
+                key: res.data.data[i].authorityId,
+                label: res.data.data[i].authority,
+              })
+            }
           },
           err => {
             console.log("err :", err);
@@ -174,7 +212,7 @@
           this.getUsers();
         }else {
           this.req({
-            url: "/security/front/user",
+            url: "/security/getUser",
             params: {
               "username": this.keyword
             },
@@ -195,7 +233,7 @@
         }
       },
       //删除用户
-      handleDelete(row, index) {
+      handleDelete(row) {
         this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -234,7 +272,6 @@
       // 创建用户
       handleCreate() {
         this.dialogVisible = true;
-        this.groupEdit = true;
         this.dialogType = 'new';
         this.user = Object.assign({}, defaultUser);
         this.roleValue = '';
@@ -242,7 +279,6 @@
       // 编辑用户信息
       handleEdit(row) {
         this.dialogVisible = true;
-        this.groupEdit = false;
         this.dialogType = 'edit';
         this.user = row;
         this.groupValue = row.groupDescription;
@@ -335,7 +371,10 @@
           ret = "未启用"
         }
         return ret;
-      }
+      },
+      handleAuthority(row) {
+        this.authorityDialogVisible = true;
+      },
     }
   };
 </script>
