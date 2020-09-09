@@ -108,7 +108,8 @@ export const constantRoutes = [
       title: '系统设置',
       icon: 'setting'
     },
-    children: [{
+    children: [
+      {
         path: 'actionCode',
         name: 'actionCode',
         component: () => import('@/views/setting/actionCode'),
