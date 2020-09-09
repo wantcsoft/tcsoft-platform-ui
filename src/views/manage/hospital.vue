@@ -122,6 +122,7 @@
         },
         // 保存,新建医院组
         confirmEdit(hospital){
+          this.dialogVisible = false;
           if (this.dialogType !== 'edit') {
             this.req({
               url: "/security/group",

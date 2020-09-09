@@ -81,9 +81,9 @@
             center: true
           }).then(() => {
             this.req({
-              url: "/security/group",
+              url: "/security/authority",
               data: {
-                "authorityId": row.authorityId
+                "authorityId": row.authorityId,
               },
               params: {
                 "type": "delete"
@@ -122,6 +122,7 @@
         },
         // 保存,新建权限信息
         confirmEdit(authority){
+          this.dialogVisible = false;
           if (this.dialogType !== 'edit') {
             this.req({
               url: "/security/authority",

@@ -39,9 +39,9 @@
               <el-select v-model="groupValue" placeholder="请选择" style="width: 90%">
                 <el-option
                   v-for="item in groupData"
-                  :key="item.groupDescription"
+                  :key="item.group"
                   :label="item.groupDescription"
-                  :value="item.groupId">
+                  :value="item.group">
                 </el-option>
               </el-select>
             </template>
@@ -57,9 +57,9 @@
               <el-select v-model="roleValue" placeholder="请选择" style="width: 90%">
                 <el-option
                   v-for="item in roleData"
-                  :key="item.roleDescription"
+                  :key="item.role"
                   :label="item.roleDescription"
-                  :value="item.roleId">
+                  :value="item.role">
                 </el-option>
               </el-select>
             </template>
@@ -81,17 +81,17 @@
         </el-form>
         <div style="text-align:right;">
           <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-          <el-button type="primary" @click="confirmEdit(user)">确认</el-button>
+          <el-button type="primary" @click="confirmEdit(user, groupValue, roleValue)">确认</el-button>
         </div>
       </el-dialog>
 
-      <el-dialog title="权限管理" :visible.sync="authorityDialogVisible" width="45%" center>
+      <el-dialog title="权限管理" :visible.sync="authorityDialogVisible" width="44%" center>
         <template>
           <el-transfer v-model="authorityValue" :data="authorityData" :titles="['所有权限', '已有权限']"></el-transfer>
         </template>
         <span slot="footer" class="dialog-footer">
           <el-button @click="authorityDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="modifyAuthority">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -122,6 +122,7 @@
         authorityDialogVisible: false,
         authorityData: [],
         authorityValue: [],
+        userId: 0,
 
         dialogType: 'new',
         tableData: [],
@@ -159,7 +160,7 @@
       // 获取所有的用户信息
       getUsers() {
         this.req({
-          url: "/security/getUser",
+          url: "/security/user",
           method: "GET",
         }).then(
           res => {
@@ -174,13 +175,12 @@
       },
       //获取角色的信息
       getRoles () {
-        let that = this;
         this.req({
           url: "/security/getRole",
           method: "GET",
         }).then(
           res => {
-            that.roleData = res.data.data;
+            this.roleData = res.data.data;
           },
           err => {
             console.log("err :", err);
@@ -206,13 +206,33 @@
           }
         );
       },
+      // 根据用户ID获取用户的权限
+      getUserPermission(userId) {
+        this.req({
+          url: "/security/permission",
+          params: {
+            "userId": userId,
+          },
+          method: "GET",
+        }).then(
+          res => {
+            this.authorityValue = [];
+            for (let i=0; i<res.data.data.length; i++){
+              this.authorityValue.push(res.data.data[i].authorityId);
+            }
+          },
+          err => {
+            console.log("err :", err);
+          }
+        );
+      },
       // 搜索
       goSearch() {
         if (this.keyword === ''){
           this.getUsers();
         }else {
           this.req({
-            url: "/security/getUser",
+            url: "/security/user",
             params: {
               "username": this.keyword
             },
@@ -243,7 +263,7 @@
           this.req({
             url: "/security/user",
             data: {
-              "userId": row.userId
+              "userId": row.userId,
             },
             params: {
               "type": "delete"
@@ -274,6 +294,7 @@
         this.dialogVisible = true;
         this.dialogType = 'new';
         this.user = Object.assign({}, defaultUser);
+        this.groupValue = '';
         this.roleValue = '';
       },
       // 编辑用户信息
@@ -281,11 +302,12 @@
         this.dialogVisible = true;
         this.dialogType = 'edit';
         this.user = row;
-        this.groupValue = row.groupDescription;
-        this.roleValue = row.roleDescription;
+        this.groupValue = row.group;
+        this.roleValue = row.role;
       },
       // 保存,新建用户
-      confirmEdit(user){
+      confirmEdit(user, groupValue, roleValue){
+        this.dialogVisible = false;
         if (this.dialogType !== 'edit') {
           this.req({
             url: "/security/user",
@@ -293,8 +315,8 @@
               "type": "create"
             },
             data: {
-              "groupId": this.groupValue,
-              "roleId": this.roleValue,
+              "group": groupValue,
+              "role": roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,
@@ -326,8 +348,8 @@
             },
             data: {
               "userId": user.userId,
-              "groupId": this.groupValue,
-              "roleId": this.roleValue,
+              "group": groupValue,
+              "role": roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,
@@ -353,9 +375,9 @@
         }
       },
       // 账户是否锁定值转换
-      formatLock(row, column, value) {
+      formatLock(row) {
         let ret = ''
-        if (value) {
+        if (row.accountNonLocked) {
           ret = "锁定"
         } else {
           ret = "未锁定"
@@ -363,17 +385,42 @@
         return ret;
       },
       // 账户是和否启用值转换
-      formatEnable(row, column, value){
+      formatEnable(row){
         let ret = ''
-        if (value) {
+        if (row.enabled) {
           ret = "启用"
         } else {
           ret = "未启用"
         }
         return ret;
       },
+      // 查看用户的权限
       handleAuthority(row) {
         this.authorityDialogVisible = true;
+        this.getUserPermission(row.userId);
+        this.userId = row.userId;
+      },
+      // 编辑用户的权限
+      modifyAuthority() {
+        this.authorityDialogVisible = false;
+        this.req({
+          url: "/security/permission",
+          params: {
+            "userId": this.userId,
+          },
+          data: this.authorityValue,
+          method: "POST",
+        }).then(
+          res => {
+            this.$message({
+              type: 'success',
+              message: res.data.message
+            });
+          },
+          err => {
+            console.log("err :", err);
+          }
+        );
       },
     }
   };
