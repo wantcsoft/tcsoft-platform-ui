@@ -14,16 +14,16 @@
     <el-table :data="tableData" size="mini" stripe style="width: 100%">
       <el-table-column prop="testItemCode" label="testItemCode" width="100%"></el-table-column>
       <el-table-column prop="testItemName" label="testItemName" width="100%"></el-table-column>
+      <el-table-column prop="testItemTypeName" label="testItemType" width="110%"></el-table-column>
+      <el-table-column prop="dataTypeId" label="dataTypeId" width="100%"></el-table-column>
+      <el-table-column prop="unitId" label="unitId" width="70%"></el-table-column>
       <el-table-column prop="printOrder" label="printOrder" width="80%"></el-table-column>
-      <el-table-column prop="qCItem" :formatter="formatQCItem" label="isQCItem" width="80%"></el-table-column>
       <el-table-column prop="accuracy" label="accuracy" width="80%"></el-table-column>
+      <el-table-column prop="qcItem" :formatter="formatQCItem" label="isQCItem" width="80%"></el-table-column>
       <el-table-column prop="ageRelated" :formatter="formatAgeRelated" label="isAgeRelated" width="100%"></el-table-column>
       <el-table-column prop="sexRelated" :formatter="formatSexRelated" label="isSexRelated" width="100%"></el-table-column>
       <el-table-column prop="sampleTypeRelated" :formatter="formatSampleTypeRelater" label="isSampleTypeRelated" width="150%"></el-table-column>
-      <el-table-column prop="unitId" label="unitId" width="70%"></el-table-column>
       <el-table-column prop="ordac" :formatter="formatOrdac" label="isOrdac" width="70%"></el-table-column>
-      <el-table-column prop="testItemTypeId" label="testItemTypeId" width="110%"></el-table-column>
-      <el-table-column prop="resultTypeId" label="resultTypeId" width="100%"></el-table-column>
       <el-table-column prop="programmed" :formatter="formatProgrammed" label="isProgrammed" width="110%"></el-table-column>
       <el-table-column prop="enabled" :formatter="formatEnable" label="isEnabled" width="100%"></el-table-column>
       <el-table-column  label="Edit">
@@ -46,14 +46,54 @@
         <el-form-item label="testItemName">
           <el-input v-model="testItemInfo.testItemName" placeholder="testItemName" style="width: 90%"/>
         </el-form-item>
+        <el-form-item label="testItemType">
+          <template>
+            <el-select v-model="testItemTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in testItemTypeData"
+                :key="item.testItemTypeName"
+                :label="item.testItemTypeName"
+                :value="item.testItemTypeId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+        <el-form-item label="dataType">
+          <template>
+            <el-select v-model="dataTypeValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in dataTypeData"
+                :key="item.dataTypeName"
+                :label="item.dataTypeName"
+                :value="item.dataTypeId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
+        <el-form-item label="unitId">
+          <template>
+            <el-select v-model="resultUnitValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in resultUnitData"
+                :key="item.resultUnit"
+                :label="item.resultUnit"
+                :value="item.resultUnitId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
         <el-form-item label="printOrder">
           <el-input v-model="testItemInfo.printOrder" placeholder="printOrder" style="width: 90%"/>
         </el-form-item>
-        <el-form-item label="isQCItem">
-          <el-input v-model="testItemInfo.qCItem" placeholder="isQCItem" style="width: 90%"/>
-        </el-form-item>
         <el-form-item label="accuracy">
           <el-input v-model="testItemInfo.accuracy" placeholder="accuracy" style="width: 90%"/>
+        </el-form-item>
+        <el-form-item label="isQCItem">
+          <el-switch
+            v-model="testItemInfo.qcItem"
+            active-text="是"
+            inactive-text="否">
+          </el-switch>
         </el-form-item>
         <el-form-item label="isAgeRelated">
           <el-switch
@@ -76,21 +116,12 @@
             inactive-text="不相关">
           </el-switch>
         </el-form-item>
-        <el-form-item label="unitId">
-          <el-input v-model="testItemInfo.unitId" placeholder="unitId" style="width: 90%"/>
-        </el-form-item>
         <el-form-item label="isOrdac">
           <el-switch
             v-model="testItemInfo.ordac"
             active-text="订阅"
             inactive-text="未订阅">
           </el-switch>
-        </el-form-item>
-        <el-form-item label="testItemTypeId">
-          <el-input v-model="testItemInfo.testItemTypeId" placeholder="testItemTypeId" style="width: 90%"/>
-        </el-form-item>
-        <el-form-item label="resultTypeId">
-          <el-input v-model="testItemInfo.resultTypeId" placeholder="resultTypeId" style="width: 90%"/>
         </el-form-item>
         <el-form-item label="isProgrammed">
           <el-switch
@@ -106,11 +137,10 @@
             inactive-text="未启用">
           </el-switch>
         </el-form-item>
-
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="testItemInfoDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmTestItemInfoEdit(testItemInfo)">save</el-button>
+        <el-button type="primary" @click="confirmTestItemInfoEdit(testItemInfo, testItemTypeValue, dataTypeValue, resultUnitValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -124,6 +154,13 @@
         tableData: [],
         testItemInfoDialogVisible: false,
         testItemInfo: {},
+        testItemTypeData: [],
+        testItemTypeValue: '',
+        dataTypeData: [],
+        dataTypeValue: '',
+        resultUnitData: [],
+        resultUnitValue: '',
+
         hospitalValue: '',
         hospitalOptions: [],
         type: ''
@@ -131,6 +168,7 @@
     },
     mounted () {
       this.getHospitals();
+      this.getDataTypes();
     },
     methods: {
       getHospitals() {
@@ -156,6 +194,8 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getTestItemInfos(list[0].hospitalId);
+              this.getTestItemTypes(list[0].hospitalId);
+              this.getResultUnits(list[0].hospitalId);
             }
           },
           err => {
@@ -192,12 +232,91 @@
           }
         );
       },
+      getTestItemTypes(hospitalId) {
+        this.req({
+          url: "/setting/testItemType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.testItemTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getDataTypes() {
+        this.req({
+          url: "/setting/dataType",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.dataTypeData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+      getResultUnits(hospitalId) {
+        this.req({
+          url: "/setting/resultUnit",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.resultUnitData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleTestItemInfoEdit(row) {
         this.testItemInfoDialogVisible = true;
         this.testItemInfo = row;
         this.type = 'edit';
+        this.testItemTypeValue = row.testItemTypeId;
+        this.dataTypeValue = row.dataTypeId;
+        this.resultUnitValue = row.unitId;
       },
-      confirmTestItemInfoEdit(testItemInfo) {
+      confirmTestItemInfoEdit(testItemInfo, testItemTypeValue, dataTypeValue, resultUnitValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/testItemInfo",
@@ -208,16 +327,16 @@
               "testItemId": testItemInfo.testItemId,
               "testItemCode": testItemInfo.testItemCode,
               "testItemName": testItemInfo.testItemName,
+              "testItemTypeId": testItemTypeValue,
+              "dataTypeId": dataTypeValue,
+              "unitId": resultUnitValue,
               "printOrder": testItemInfo.printOrder,
-              "qCItem": testItemInfo.qCItem,
+              "qcItem": testItemInfo.qcItem,
               "accuracy": testItemInfo.accuracy,
               "ageRelated": testItemInfo.ageRelated,
               "sexRelated": testItemInfo.sexRelated,
               "sampleTypeRelated": testItemInfo.sampleTypeRelated,
-              "unitId": testItemInfo.unitId,
               "ordac": testItemInfo.ordac,
-              "testItemTypeId": testItemInfo.testItemTypeId,
-              "resultTypeId": testItemInfo.resultTypeId,
               "programmed": testItemInfo.programmed,
               "enabled": testItemInfo.enabled,
             },
@@ -248,16 +367,16 @@
               "hospitalId": this.hospitalValue[0],
               "testItemCode": testItemInfo.testItemCode,
               "testItemName": testItemInfo.testItemName,
+              "testItemTypeId": testItemTypeValue,
+              "dataTypeId": dataTypeValue,
+              "unitId": resultUnitValue,
               "printOrder": testItemInfo.printOrder,
-              "qCItem": testItemInfo.qCItem,
+              "qcItem": testItemInfo.qcItem,
               "accuracy": testItemInfo.accuracy,
               "ageRelated": testItemInfo.ageRelated,
               "sexRelated": testItemInfo.sexRelated,
               "sampleTypeRelated": testItemInfo.sampleTypeRelated,
-              "unitId": testItemInfo.unitId,
               "ordac": testItemInfo.ordac,
-              "testItemTypeId": testItemInfo.testItemTypeId,
-              "resultTypeId": testItemInfo.resultTypeId,
               "programmed": testItemInfo.programmed,
               "enabled": testItemInfo.enabled,
             },
@@ -284,6 +403,9 @@
         this.testItemInfoDialogVisible = true;
         this.testItemInfo = {};
         this.type = 'create';
+        this.testItemTypeValue = '';
+        this.dataTypeValue = '';
+        this.resultUnitValue = '';
       },
       handleDelete(row) {
         this.$confirm('此操作将永久删除该age, 是否继续?', '提示', {
@@ -330,7 +452,7 @@
       },
       formatQCItem(row) {
         let ret = ''
-        if (row.qCItem) {
+        if (row.qcItem) {
           ret = "是";
         } else {
           ret = "否";
@@ -365,7 +487,6 @@
         return ret;
       },
       formatOrdac(row) {
-        console.log(row);
         let ret = ''
         if (row.ordac) {
           ret = "订阅"
@@ -376,7 +497,7 @@
       },
       formatProgrammed(row) {
         let ret = ''
-        if (row.order) {
+        if (row.programmed) {
           ret = "是"
         } else {
           ret = "否"
@@ -385,6 +506,8 @@
       },
       selectDown() {
         this.getTestItemInfos(this.hospitalValue[0]);
+        this.getTestItemTypes(this.hospitalValue[0]);
+        this.getResultUnits(this.hospitalValue[0]);
       },
     }
   }

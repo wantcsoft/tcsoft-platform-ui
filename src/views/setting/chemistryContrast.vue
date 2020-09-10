@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="testItemCode" label="testItemCode"></el-table-column>
+      <el-table-column prop="testItemName" label="testItemName"></el-table-column>
       <el-table-column prop="sampleTypeName" label="sampleTypeName" width="150"></el-table-column>
       <el-table-column prop="instrumentName" label="instrumentName"></el-table-column>
       <el-table-column prop="chemCode" label="ChemCode"></el-table-column>
@@ -31,13 +31,13 @@
 
     <el-dialog :visible.sync="chemistryContrastDialogVisible" title="ChemistryContrast" width="30%">
       <el-form :model="chemistryContrast" label-width="40%" label-position="left">
-        <el-form-item label="testItemCode">
+        <el-form-item label="testItemName">
           <template>
             <el-select v-model="testItemInfoValue" placeholder="请选择" style="width: 90%">
               <el-option
                 v-for="item in testItemInfoData"
-                :key="item.testItemCode"
-                :label="item.testItemCode"
+                :key="item.testItemName"
+                :label="item.testItemName"
                 :value="item.testItemId">
               </el-option>
             </el-select>

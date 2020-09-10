@@ -12,6 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
+      <el-table-column prop="testItemName" label="testItemName"></el-table-column>
       <el-table-column prop="formula" label="formula"></el-table-column>
       <el-table-column prop="dayRange" label="dayRange"></el-table-column>
       <el-table-column  label="Edit">
@@ -28,6 +29,18 @@
 
     <el-dialog :visible.sync="testItemDeltaCheckDialogVisible" title="TestItemDeltaCheck" width="30%">
       <el-form :model="testItemDeltaCheck" label-width="40%" label-position="left">
+        <el-form-item label="testItemName">
+          <template>
+            <el-select v-model="testItemInfoValue" placeholder="请选择" style="width: 90%">
+              <el-option
+                v-for="item in testItemInfoData"
+                :key="item.testItemName"
+                :label="item.testItemName"
+                :value="item.testItemId">
+              </el-option>
+            </el-select>
+          </template>
+        </el-form-item>
         <el-form-item label="formula">
           <el-input v-model="testItemDeltaCheck.formula" placeholder="formula" style="width: 90%"/>
         </el-form-item>
@@ -38,7 +51,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="testItemDeltaCheckDialogVisible=false">cancel</el-button>
-        <el-button type="primary" @click="confirmTestItemDeltaCheckEdit(testItemDeltaCheck)">save</el-button>
+        <el-button type="primary" @click="confirmTestItemDeltaCheckEdit(testItemDeltaCheck, testItemInfoValue)">save</el-button>
       </div>
     </el-dialog>
   </div>
@@ -52,6 +65,9 @@
         tableData: [],
         testItemDeltaCheckDialogVisible: false,
         testItemDeltaCheck: {},
+        testItemInfoData: [],
+        testItemInfoValue: '',
+
         hospitalValue: '',
         hospitalOptions: [],
         type: ''
@@ -84,6 +100,7 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getTestItemDeltaChecks(list[0].hospitalId);
+              this.getTestItemInfos(list[0].hospitalId);
             }
           },
           err => {
@@ -120,12 +137,38 @@
           }
         );
       },
+      getTestItemInfos(hospitalId) {
+        this.req({
+          url: "/setting/testItemInfo",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+            "hospitalId": hospitalId
+          },
+        }).then(
+          res => {
+            if (res.data.code === 200) {
+              this.testItemInfoData = res.data.data;
+            }
+          },
+          err => {
+            console.log(err)
+            this.$message({
+              type: 'success',
+              message: "配置获取失败"
+            });
+          }
+        );
+      },
+
       handleTestItemDeltaCheckEdit(row) {
         this.testItemDeltaCheckDialogVisible = true;
         this.testItemDeltaCheck = row;
         this.type = 'edit';
       },
-      confirmTestItemDeltaCheckEdit(testItemDeltaCheck) {
+      confirmTestItemDeltaCheckEdit(testItemDeltaCheck, testItemInfoValue) {
         if (this.type === 'edit'){
           this.req({
             url: "/setting/testItemDeltaCheck",
@@ -133,6 +176,7 @@
               "type": "modify"
             },
             data: {
+              "hospitalId": this.hospitalValue[0],
               "testItemId": testItemDeltaCheck.testItemId,
               "formula": testItemDeltaCheck.formula,
               "dayRange": testItemDeltaCheck.dayRange,
@@ -162,6 +206,7 @@
             },
             data: {
               "hospitalId": this.hospitalValue[0],
+              "testItemId": testItemInfoValue,
               "formula": testItemDeltaCheck.formula,
               "dayRange": testItemDeltaCheck.dayRange,
             },
@@ -234,6 +279,7 @@
       },
       selectDown() {
         this.getTestItemDeltaChecks(this.hospitalValue[0]);
+        this.getTestItemInfos(this.hospitalValue[0]);
       },
     }
   }
