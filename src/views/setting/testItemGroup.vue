@@ -107,6 +107,11 @@
               this.hospitalValue = [list[0].hospitalId];
               this.getTestItemGroups(list[0].hospitalId);
               this.getInstrumentGroups(list[0].hospitalId);
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

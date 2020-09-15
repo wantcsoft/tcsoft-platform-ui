@@ -121,7 +121,6 @@
           },
         }).then(
           res => {
-            console.log(res.data.data);
             if (res.data.code === 200) {
               const list = res.data.data;
               for (let i = 0; i < list.length; i++) {
@@ -137,8 +136,11 @@
               this.getTestItemInfo(list[0].hospitalId);
               this.getSampleType(list[0].hospitalId);
               this.getInstrument(list[0].hospitalId);
-
-              this.handleDatas();
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

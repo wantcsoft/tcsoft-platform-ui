@@ -116,6 +116,11 @@
               this.getComparisonInfos(list[0].hospitalId);
               this.getInstrumentTypes(list[0].hospitalId);
               this.getComparisonTypes();
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

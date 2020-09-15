@@ -122,6 +122,11 @@
               this.hospitalValue = [list[0].hospitalId];
               this.getMaterials(list[0].hospitalId);
               this.getSampleTypes(list[0].hospitalId);
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

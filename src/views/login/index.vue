@@ -121,19 +121,19 @@ export default {
       });
     },
     handleLogin() {
-      let that = this;
       this.loading = true;
       this.req({
         url: "/security/login",
         data: {
-          username: that.loginForm.username,
-          password: that.loginForm.password
+          username: this.loginForm.username,
+          password: this.loginForm.password
         },
         method: "POST"
       }).then(
         res => {
           localStorage.setItem("hasLogin", true);
           localStorage.setItem("token", res.data.data);
+          localStorage.setItem("userName", this.loginForm.username);
           // localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
           this.$router.push({ path: "/index" });
           this.$message({

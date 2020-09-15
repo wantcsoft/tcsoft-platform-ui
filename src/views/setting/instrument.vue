@@ -215,6 +215,11 @@
               this.getInstrumentTypes(list[0].hospitalId);
               this.getInstrumentGroups(list[0].hospitalId);
               this.getLineTypes();
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -264,7 +269,6 @@
         }).then(
           res => {
             if (res.data.code === 200) {
-              console.log(res);
               this.instrumentTypeData = res.data.data;
             }
           },

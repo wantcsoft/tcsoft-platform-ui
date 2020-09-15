@@ -165,6 +165,11 @@
               this.getInstrumentGroups(list[0].hospitalId);
               this.getRuleGroups(list[0].hospitalId);
               this.getRuleTypes();
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -177,7 +182,6 @@
         );
       },
       getRules(hospitalId) {
-        console.log(hospitalId);
         this.req({
           url: "/setting/rule",
           method: "POST",

@@ -101,6 +101,11 @@
               this.hospitalValue = [list[0].hospitalId];
               this.getTestItemDeltaChecks(list[0].hospitalId);
               this.getTestItemInfos(list[0].hospitalId);
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

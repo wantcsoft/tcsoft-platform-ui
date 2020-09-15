@@ -99,54 +99,22 @@ export const constantRoutes = [
       }
     }]
   },
-  // 系统配置
+  // 系统基础配置
   {
-    path: '/setting',
+    path: '/system',
     component: Layout,
-    redirect: 'setting',
+    redirect: 'system',
     meta: {
-      title: '系统设置',
+      title: '系统基础设置',
       icon: 'setting'
     },
     children: [
-      {
-        path: 'actionCode',
-        name: 'actionCode',
-        component: () => import('@/views/setting/actionCode'),
-        meta: {
-          title: 'actionCode',
-        }
-      },
-      {
-        path: 'ageType',
-        name: 'ageType',
-        component: () => import('@/views/setting/ageType'),
-        meta: {
-          title: 'ageType',
-        }
-      },
       {
         path: 'auditState',
         name: 'auditState',
         component: () => import('@/views/setting/auditState'),
         meta: {
           title: 'auditState',
-        }
-      },
-      {
-        path: 'chemistryContrast',
-        name: 'chemistryContrast',
-        component: () => import('@/views/setting/chemistryContrast'),
-        meta: {
-          title: 'chemistryContrast',
-        }
-      },
-      {
-        path: 'comparisonInfo',
-        name: 'comparisonInfo',
-        component: () => import('@/views/setting/comparisonInfo'),
-        meta: {
-          title: 'comparisonInfo',
         }
       },
       {
@@ -182,19 +150,135 @@ export const constantRoutes = [
         }
       },
       {
-        path: 'instrument',
-        name: 'instrument',
-        component: () => import('@/views/setting/instrument'),
-        meta: {
-          title: 'instrument',
-        }
-      },
-      {
         path: 'instrumentAlternateType',
         name: 'instrumentAlternateType',
         component: () => import('@/views/setting/instrumentAlternateType'),
         meta: {
           title: 'instrumentAlternateType',
+        }
+      },
+      {
+        path: 'lineType',
+        name: 'lineType',
+        component: () => import('@/views/setting/lineType'),
+        meta: {
+          title: 'lineType',
+        }
+      },
+      {
+        path: 'resultType',
+        name: 'resultType',
+        component: () => import('@/views/setting/resultType'),
+        meta: {
+          title: 'resultType',
+        }
+      },
+      {
+        path: 'ruleFunction',
+        name: 'ruleFunction',
+        component: () => import('@/views/setting/ruleFunction'),
+        meta: {
+          title: 'ruleFunction',
+        }
+      },
+      {
+        path: 'ruleParam',
+        name: 'ruleParam',
+        component: () => import('@/views/setting/ruleParam'),
+        meta: {
+          title: 'ruleParam',
+        }
+      },
+      {
+        path: 'ruleType',
+        name: 'ruleType',
+        component: () => import('@/views/setting/ruleType'),
+        meta: {
+          title: 'ruleType',
+        }
+      },
+      {
+        path: 'sampleEvent',
+        name: 'sampleEvent',
+        component: () => import('@/views/setting/sampleEvent'),
+        meta: {
+          title: 'sampleEvent',
+        }
+      },
+      {
+        path: 'sampleState',
+        name: 'sampleState',
+        component: () => import('@/views/setting/sampleState'),
+        meta: {
+          title: 'sampleState',
+        }
+      },
+      {
+        path: 'sampleStatus',
+        name: 'sampleStatus',
+        component: () => import('@/views/setting/sampleStatus'),
+        meta: {
+          title: 'sampleStatus',
+        }
+      },
+      {
+        path: 'sexType',
+        name: 'sexType',
+        component: () => import('@/views/setting/sexType'),
+        meta: {
+          title: 'sexType',
+        }
+      },
+    ]
+  },
+  // 医院相关基础配置
+  {
+    path: '/hospital',
+    component: Layout,
+    redirect: 'hospital',
+    meta: {
+      title: '医院基础设置',
+      icon: 'hospitalSetting'
+    },
+    children: [
+      {
+        path: 'actionCode',
+        name: 'actionCode',
+        component: () => import('@/views/setting/actionCode'),
+        meta: {
+          title: 'actionCode',
+        }
+      },
+      {
+        path: 'ageType',
+        name: 'ageType',
+        component: () => import('@/views/setting/ageType'),
+        meta: {
+          title: 'ageType',
+        }
+      },
+      {
+        path: 'chemistryContrast',
+        name: 'chemistryContrast',
+        component: () => import('@/views/setting/chemistryContrast'),
+        meta: {
+          title: 'chemistryContrast',
+        }
+      },
+      {
+        path: 'comparisonInfo',
+        name: 'comparisonInfo',
+        component: () => import('@/views/setting/comparisonInfo'),
+        meta: {
+          title: 'comparisonInfo',
+        }
+      },
+      {
+        path: 'instrument',
+        name: 'instrument',
+        component: () => import('@/views/setting/instrument'),
+        meta: {
+          title: 'instrument',
         }
       },
       {
@@ -211,14 +295,6 @@ export const constantRoutes = [
         component: () => import('@/views/setting/instrumentType'),
         meta: {
           title: 'instrumentType',
-        }
-      },
-      {
-        path: 'lineType',
-        name: 'lineType',
-        component: () => import('@/views/setting/lineType'),
-        meta: {
-          title: 'lineType',
         }
       },
       {
@@ -270,14 +346,6 @@ export const constantRoutes = [
         }
       },
       {
-        path: 'resultType',
-        name: 'resultType',
-        component: () => import('@/views/setting/resultType'),
-        meta: {
-          title: 'resultType',
-        }
-      },
-      {
         path: 'resultUnit',
         name: 'resultUnit',
         component: () => import('@/views/setting/resultUnit'),
@@ -294,14 +362,6 @@ export const constantRoutes = [
         }
       },
       {
-        path: 'ruleFunction',
-        name: 'ruleFunction',
-        component: () => import('@/views/setting/ruleFunction'),
-        meta: {
-          title: 'ruleFunction',
-        }
-      },
-      {
         path: 'ruleGroup',
         name: 'ruleGroup',
         component: () => import('@/views/setting/ruleGroup'),
@@ -310,59 +370,11 @@ export const constantRoutes = [
         }
       },
       {
-        path: 'ruleParam',
-        name: 'ruleParam',
-        component: () => import('@/views/setting/ruleParam'),
-        meta: {
-          title: 'ruleParam',
-        }
-      },
-      {
-        path: 'ruleType',
-        name: 'ruleType',
-        component: () => import('@/views/setting/ruleType'),
-        meta: {
-          title: 'ruleType',
-        }
-      },
-      {
-        path: 'sampleEvent',
-        name: 'sampleEvent',
-        component: () => import('@/views/setting/sampleEvent'),
-        meta: {
-          title: 'sampleEvent',
-        }
-      },
-      {
-        path: 'sampleState',
-        name: 'sampleState',
-        component: () => import('@/views/setting/sampleState'),
-        meta: {
-          title: 'sampleState',
-        }
-      },
-      {
-        path: 'sampleStatus',
-        name: 'sampleStatus',
-        component: () => import('@/views/setting/sampleStatus'),
-        meta: {
-          title: 'sampleStatus',
-        }
-      },
-      {
         path: 'sampleType',
         name: 'sampleType',
         component: () => import('@/views/setting/sampleType'),
         meta: {
           title: 'sampleType',
-        }
-      },
-      {
-        path: 'sexType',
-        name: 'sexType',
-        component: () => import('@/views/setting/sexType'),
-        meta: {
-          title: 'sexType',
         }
       },
       {
@@ -415,6 +427,7 @@ export const constantRoutes = [
       }
     ]
   },
+
   // 服务管理
   {
     path: '/service',

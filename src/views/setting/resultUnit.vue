@@ -87,6 +87,11 @@
               }
               this.hospitalValue = [list[0].hospitalId];
               this.getResultUnits(list[0].hospitalId);
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

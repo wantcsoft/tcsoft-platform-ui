@@ -109,6 +109,11 @@
               this.getTestItemGroupItems(list[0].hospitalId);
               this.getTestItemGroups(list[0].hospitalId);
               this.getTestItemInfos(list[0].hospitalId);
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

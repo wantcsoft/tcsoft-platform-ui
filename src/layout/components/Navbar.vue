@@ -5,6 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <span> {{ userName }} </span>
       <el-button @click="logout">退出登录</el-button>
     </div>
   </div>
@@ -16,6 +17,11 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
 export default {
+  data() {
+    return {
+      userName: '',
+    };
+  },
   components: {
     Breadcrumb,
     Hamburger
@@ -26,9 +32,15 @@ export default {
       'avatar'
     ])
   },
+  mounted () {
+    this.fillUserName();
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    fillUserName() {
+      this.userName = localStorage.getItem("userName");
     },
     async logout() {
       localStorage.removeItem('hasLogin')
