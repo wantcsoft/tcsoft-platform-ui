@@ -112,6 +112,11 @@
           res => {
             if (res.data.code === 200) {
               this.dataTypeData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

@@ -109,6 +109,11 @@
           res => {
             if (res.data.code === 200) {
               this.tableData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

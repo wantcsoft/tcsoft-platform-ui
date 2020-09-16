@@ -195,6 +195,11 @@
           res => {
             if (res.data.code === 200) {
               this.tableData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -220,6 +225,11 @@
           res => {
             if (res.data.code === 200) {
               this.ruleGroupData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -245,6 +255,11 @@
           res => {
             if (res.data.code === 200) {
               this.instrumentGroupData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -270,6 +285,11 @@
           res => {
             if (res.data.code === 200) {
               this.ruleTypeData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

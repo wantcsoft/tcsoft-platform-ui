@@ -49,7 +49,6 @@ export const constantRoutes = [
     component: Layout,
     children: [{
       path: 'index',
-      name: 'index',
       component: () => import('@/views/index/index'),
       meta: {
         title: '首页',
@@ -427,35 +426,18 @@ export const constantRoutes = [
       }
     ]
   },
-
-  // 服务管理
+  // 账号设置
   {
-    path: '/service',
+    path: '/account',
     component: Layout,
-    redirect: '/laboratory',
-    meta: {
-      title: '实验室',
-      icon: 'laboratory'
-    },
     children: [{
-      path: 'message',
-      name: 'message',
-      component: () => import('@/views/laboratory/message'),
+      path: 'account',
+      component: () => import('@/views/accountSetting/account'),
       meta: {
-        title: '信息管理',
-        icon: 'message',
+        title: '账号设置',
+        icon: 'accountSetting'
       }
-    },
-      {
-        path: 'middleware',
-        name: 'middleware',
-        component: () => import('@/views/laboratory/middleware'),
-        meta: {
-          title: '中间件',
-          icon: 'middle',
-        }
-      },
-    ]
+    }]
   },
   // 404界面
   {

@@ -95,7 +95,7 @@
                   type: 'success',
                   message: res.data.message,
                 });
-                this.getUsers();
+                this.getGroups();
               },
               err => {
                 console.log("err :", err);

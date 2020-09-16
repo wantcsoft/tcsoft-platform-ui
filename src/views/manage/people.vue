@@ -41,7 +41,7 @@
                   v-for="item in groupData"
                   :key="item.group"
                   :label="item.groupDescription"
-                  :value="item.group">
+                  :value="item.groupId">
                 </el-option>
               </el-select>
             </template>
@@ -59,7 +59,7 @@
                   v-for="item in roleData"
                   :key="item.role"
                   :label="item.roleDescription"
-                  :value="item.role">
+                  :value="item.roleId">
                 </el-option>
               </el-select>
             </template>
@@ -240,7 +240,6 @@
           }).then(
             res => {
               this.tableData = res.data.data;
-              console.log(res.data.data);
               this.$message({
                 type: 'success',
                 message: res.data.message
@@ -315,8 +314,8 @@
               "type": "create"
             },
             data: {
-              "group": groupValue,
-              "role": roleValue,
+              "groupId": groupValue,
+              "roleId": roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,
@@ -348,8 +347,8 @@
             },
             data: {
               "userId": user.userId,
-              "group": groupValue,
-              "role": roleValue,
+              "groupId": groupValue,
+              "roleId": roleValue,
               "username": user.username,
               "password": user.password,
               "accountNonLocked": user.accountNonLocked,

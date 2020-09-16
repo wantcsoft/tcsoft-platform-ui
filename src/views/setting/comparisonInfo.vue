@@ -146,6 +146,11 @@
           res => {
             if (res.data.code === 200) {
               this.tableData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -171,6 +176,11 @@
           res => {
             if (res.data.code === 200) {
               this.instrumentTypeData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
@@ -196,6 +206,11 @@
           res => {
             if (res.data.code === 200) {
               this.comparisonTypeData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {

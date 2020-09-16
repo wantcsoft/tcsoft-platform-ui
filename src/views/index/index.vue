@@ -6,22 +6,6 @@
       </el-card>
     </el-col>
     <el-row :gutter="12">
-      <el-col :span="8">
-        <el-card shadow="always">
-          <i class="el-icon-info"></i>
-<!--          总是显示-->
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="always">
-          鼠标悬浮时显示
-        </el-card>
-      </el-col>
-      <el-col :span="8">
-        <el-card shadow="always">
-          从不显示
-        </el-card>
-      </el-col>
     </el-row>
   </div>
 </template>

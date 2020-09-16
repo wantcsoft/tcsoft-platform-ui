@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" stripe style="margin-left: 3%; width: 94%">
-      <el-table-column prop="testItemTypeName" label="TestItemTypeId"></el-table-column>
+      <el-table-column prop="testItemTypeName" label="TestItemType"></el-table-column>
       <el-table-column  label="Edit">
         <template slot-scope="scope" >
           <el-button size="mini" type="primary" @click="handleTestItemTypeEdit(scope.row)">编辑</el-button>
@@ -27,8 +27,8 @@
 
     <el-dialog :visible.sync="testItemTypeDialogVisible" title="TestItemType" width="30%">
       <el-form :model="testItemType" label-width="40%" label-position="left">
-        <el-form-item label="testItemTypeName">
-          <el-input v-model="testItemType.testItemTypeName" placeholder="testItemTypeName" style="width: 90%"/>
+        <el-form-item label="testItemType">
+          <el-input v-model="testItemType.testItemTypeName" placeholder="testItemType" style="width: 90%"/>
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -109,6 +109,11 @@
           res => {
             if (res.data.code === 200) {
               this.tableData = res.data.data;
+            }else {
+              this.$message({
+                type: 'success',
+                message: res.data.message,
+              });
             }
           },
           err => {
