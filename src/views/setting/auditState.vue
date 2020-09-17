@@ -51,7 +51,13 @@
       getAuditStates() {
         this.req({
           url: "/setting/auditState",
-          method: "GET",
+          method: "POST",
+          params: {
+            "type": "query"
+          },
+          data: {
+
+          },
         }).then(
           res => {
             if (res.data.code === 200) {

@@ -39,7 +39,7 @@
               <el-select v-model="groupValue" placeholder="请选择" style="width: 90%">
                 <el-option
                   v-for="item in groupData"
-                  :key="item.group"
+                  :key="item.groupId"
                   :label="item.groupDescription"
                   :value="item.groupId">
                 </el-option>
@@ -57,7 +57,7 @@
               <el-select v-model="roleValue" placeholder="请选择" style="width: 90%">
                 <el-option
                   v-for="item in roleData"
-                  :key="item.role"
+                  :key="item.roleId"
                   :label="item.roleDescription"
                   :value="item.roleId">
                 </el-option>
@@ -301,8 +301,8 @@
         this.dialogVisible = true;
         this.dialogType = 'edit';
         this.user = row;
-        this.groupValue = row.group;
-        this.roleValue = row.role;
+        this.groupValue = row.groupId;
+        this.roleValue = row.roleId;
       },
       // 保存,新建用户
       confirmEdit(user, groupValue, roleValue){

@@ -106,9 +106,12 @@
       getActionCodes(hospitalId) {
         this.req({
           url: "/setting/actionCode",
-          method: "GET",
+          method: "POST",
           params: {
-            "hospitalId": hospitalId
+            "type": "query",
+          },
+          data: {
+            "hospitalId": hospitalId,
           },
         }).then(
           res => {
